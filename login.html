@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول - لُباب الرقمي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: #0d0d0d;
+            color: #c4c4c4;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: rgba(20, 20, 20, 0.9);
+            border: 1px solid #333;
+            padding: 40px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            font-size: 2rem;
+            color: #fff;
+            text-shadow: 2px 2px 0px #8a0303, -1px -1px 5px #000;
+            font-family: 'Courier New', Courier, monospace;
+            margin-bottom: 10px;
+        }
+
+        .logo p {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 10px;
+            background: transparent;
+            color: #888;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s;
+            font-family: 'Tajawal', sans-serif;
+            text-align: center;
+        }
+
+        .tab.active {
+            color: #fff;
+            background: #8a0303;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #888;
+            font-family: monospace;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            background: #111;
+            border: 1px solid #333;
+            color: #fff;
+            border-radius: 4px;
+            font-family: monospace;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #8a0303;
+            box-shadow: 0 0 5px rgba(138, 3, 3, 0.3);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: #8a0303;
+            color: #fff;
+            border: 1px solid #8a0303;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-family: monospace;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin-bottom: 15px;
+        }
+
+        .btn:hover {
+            background: #a50404;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(138, 3, 3, 0.3);
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-link a {
+            color: #8a0303;
+            text-decoration: none;
+            font-family: monospace;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: #ff4444;
+            text-align: center;
+            margin-bottom: 15px;
+            font-family: monospace;
+            display: none;
+        }
+
+        .success-message {
+            color: #4caf50;
+            text-align: center;
+            margin-bottom: 15px;
+            font-family: monospace;
+            display: none;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="login-card">
+            <div class="logo">
+                <h1>لُباب الرقمي</h1>
+                <p>منصة الكتب والمحتوى الثقافي الرقمي</p>
+            </div>
+
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('login')">تسجيل الدخول</button>
+                <button class="tab" onclick="switchTab('register')">إنشاء حساب</button>
+            </div>
+
+            <!-- Login Form -->
+            <div id="login-tab" class="tab-content active">
+                <div id="login-error" class="error-message"></div>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label>البريد الإلكتروني:</label>
+                        <input type="email" id="login-email" class="form-control" required placeholder="أدخل بريدك الإلكتروني">
+                    </div>
+                    <div class="form-group">
+                        <label>كلمة المرور:</label>
+                        <input type="password" id="login-password" class="form-control" required placeholder="أدخل كلمة المرور">
+                    </div>
+                    <button type="submit" class="btn">تسجيل الدخول</button>
+                </form>
+            </div>
+
+            <!-- Register Form -->
+            <div id="register-tab" class="tab-content">
+                <div id="register-error" class="error-message"></div>
+                <div id="register-success" class="success-message"></div>
+                <form id="register-form">
+                    <div class="form-group">
+                        <label>الاسم الكامل:</label>
+                        <input type="text" id="register-name" class="form-control" required placeholder="أدخل اسمك الكامل">
+                    </div>
+                    <div class="form-group">
+                        <label>البريد الإلكتروني:</label>
+                        <input type="email" id="register-email" class="form-control" required placeholder="أدخل بريدك الإلكتروني">
+                    </div>
+                    <div class="form-group">
+                        <label>كلمة المرور:</label>
+                        <input type="password" id="register-password" class="form-control" required placeholder="أدخل كلمة مرور قوية">
+                    </div>
+                    <div class="form-group">
+                        <label>تأكيد كلمة المرور:</label>
+                        <input type="password" id="register-confirm" class="form-control" required placeholder="أعد إدخال كلمة المرور">
+                    </div>
+                    <button type="submit" class="btn">إنشاء حساب</button>
+                </form>
+            </div>
+
+            <div class="back-link">
+                <a href="index.html">← العودة للصفحة الرئيسية</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Switch between tabs
+        function switchTab(tab) {
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(t => t.classList.remove('active'));
+            contents.forEach(c => c.classList.remove('active'));
+            
+            if (tab === 'login') {
+                tabs[0].classList.add('active');
+                document.getElementById('login-tab').classList.add('active');
+            } else {
+                tabs[1].classList.add('active');
+                document.getElementById('register-tab').classList.add('active');
+            }
+        }
+
+        // Mock user database (in real app, this would be connected to a backend)
+        let users = JSON.parse(localStorage.getItem('lubab_users') || '[]');
+
+        // Login form handler
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const errorDiv = document.getElementById('login-error');
+            
+            errorDiv.style.display = 'none';
+            
+            // Check if user exists
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                // Store current user session
+                localStorage.setItem('lubab_current_user', JSON.stringify(user));
+                window.location.href = 'dashboard.html';
+            } else {
+                // Show error
+                errorDiv.textContent = 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
+                errorDiv.style.display = 'block';
+            }
+        });
+
+        // Register form handler
+        document.getElementById('register-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('register-name').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const confirm = document.getElementById('register-confirm').value;
+            const errorDiv = document.getElementById('register-error');
+            const successDiv = document.getElementById('register-success');
+            
+            errorDiv.style.display = 'none';
+            successDiv.style.display = 'none';
+            
+            // Validation
+            if (password !== confirm) {
+                errorDiv.textContent = 'كلمات المرور غير متطابقة';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            if (password.length < 6) {
+                errorDiv.textContent = 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            // Check if user already exists
+            if (users.find(u => u.email === email)) {
+                errorDiv.textContent = 'هذا البريد الإلكتروني مسجل بالفعل';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            // Create new user
+            const newUser = {
+                id: Date.now().toString(),
+                name: name,
+                email: email,
+                password: password, // In real app, this should be hashed
+                joinDate: new Date().toISOString().split('T')[0],
+                avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=8a0303&color=fff`
+            };
+            
+            users.push(newUser);
+            localStorage.setItem('lubab_users', JSON.stringify(users));
+            
+            // Show success message
+            successDiv.textContent = 'تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول';
+            successDiv.style.display = 'block';
+            
+            // Clear form
+            document.getElementById('register-form').reset();
+            
+            // Switch to login tab after 2 seconds
+            setTimeout(() => {
+                switchTab('login');
+            }, 2000);
+        });
+
+        // Add demo user for testing
+        if (users.length === 0) {
+            const demoUser = {
+                id: '1',
+                name: 'مستخدم تجريبي',
+                email: 'user@example.com',
+                password: 'password123',
+                joinDate: '2024-01-01',
+                avatar: 'https://ui-avatars.com/api/?name=مستخدم+تجريبي&background=8a0303&color=fff'
+            };
+            users.push(demoUser);
+            localStorage.setItem('lubab_users', JSON.stringify(users));
+        }
+    </script>
+</body>
+</html>

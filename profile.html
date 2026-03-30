@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الملف الشخصي - لُباب الرقمي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: #0d0d0d;
+            color: #c4c4c4;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000 100%);
+        }
+
+        .header {
+            background: rgba(20, 20, 20, 0.9);
+            border-bottom: 1px solid #333;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            color: #fff;
+            text-shadow: 2px 2px 0px #8a0303;
+            font-family: 'Courier New', Courier, monospace;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #888;
+            text-decoration: none;
+            font-family: monospace;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .profile-sidebar {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #333;
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .profile-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 3px solid #8a0303;
+            margin: 0 auto 20px;
+            background: #111;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-size: 3rem;
+            font-family: monospace;
+        }
+
+        .profile-name {
+            font-size: 1.5rem;
+            color: #fff;
+            margin-bottom: 10px;
+            font-family: monospace;
+        }
+
+        .profile-email {
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            font-family: monospace;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .stat-item {
+            background: rgba(138, 3, 3, 0.1);
+            border: 1px solid #8a0303;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            color: #8a0303;
+            font-weight: bold;
+            font-family: monospace;
+        }
+
+        .stat-label {
+            color: #888;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .profile-main {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #333;
+            padding: 30px;
+            border-radius: 8px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background: transparent;
+            color: #888;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s;
+            font-family: monospace;
+        }
+
+        .tab.active {
+            color: #fff;
+            background: #8a0303;
+        }
+
+        .tab:hover {
+            color: #fff;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #888;
+            font-family: monospace;
+            font-weight: bold;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            background: #111;
+            border: 1px solid #333;
+            color: #fff;
+            border-radius: 4px;
+            font-family: monospace;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #8a0303;
+            box-shadow: 0 0 5px rgba(138, 3, 3, 0.3);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            background: #8a0303;
+            color: #fff;
+            border: 1px solid #8a0303;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-family: monospace;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: #a50404;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(138, 3, 3, 0.3);
+        }
+
+        .btn-secondary {
+            background: #111;
+            border-color: #333;
+            color: #fff;
+        }
+
+        .btn-secondary:hover {
+            background: #222;
+        }
+
+        .btn-danger {
+            background: #f44336;
+            border-color: #f44336;
+        }
+
+        .btn-danger:hover {
+            background: #d32f2f;
+        }
+
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .book-card {
+            background: rgba(30, 30, 30, 0.8);
+            border: 1px solid #333;
+            padding: 20px;
+            border-radius: 8px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .book-card:hover {
+            transform: translateY(-5px);
+            border-color: #8a0303;
+        }
+
+        .book-title {
+            color: #fff;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            font-family: monospace;
+        }
+
+        .book-author {
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .book-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .book-status {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .status-pending { background: #ff6b35; }
+        .status-approved { background: #4caf50; }
+        .status-rejected { background: #f44336; }
+
+        .activity-item {
+            background: rgba(30, 30, 30, 0.8);
+            border: 1px solid #333;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .activity-text {
+            flex: 1;
+            color: #bbb;
+        }
+
+        .activity-date {
+            color: #666;
+            font-size: 0.9rem;
+            font-family: monospace;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .success-message {
+            color: #4caf50;
+            background: rgba(76, 175, 80, 0.1);
+            border: 1px solid #4caf50;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-family: monospace;
+            display: none;
+        }
+
+        .error-message {
+            color: #ff4444;
+            background: rgba(255, 68, 68, 0.1);
+            border: 1px solid #ff4444;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-family: monospace;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .profile-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .profile-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .books-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="dashboard.html" class="logo">لُباب الرقمي</a>
+            <nav class="nav-links">
+                <a href="dashboard.html" class="nav-link">لوحة التحكم</a>
+                <a href="books.html" class="nav-link">المكتبة</a>
+                <a href="upload.html" class="nav-link">رفع كتاب</a>
+                <a href="search.html" class="nav-link">بحث</a>
+            </nav>
+            <div class="user-info">
+                <img id="user-avatar" src="" alt="User Avatar" class="user-avatar">
+                <span id="user-name" style="color: #fff; font-family: monospace;"></span>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="profile-grid">
+            <div class="profile-sidebar">
+                <div id="profile-avatar" class="profile-avatar">
+                    <span id="avatar-text">؟</span>
+                </div>
+                <h2 id="profile-name" class="profile-name">اسم المستخدم</h2>
+                <p id="profile-email" class="profile-email">user@example.com</p>
+                
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <div id="uploaded-books" class="stat-value">0</div>
+                        <div class="stat-label">كتب مرفوعة</div>
+                    </div>
+                    <div class="stat-item">
+                        <div id="approved-books" class="stat-value">0</div>
+                        <div class="stat-label">كتب معتمدة</div>
+                    </div>
+                    <div class="stat-item">
+                        <div id="total-views" class="stat-value">0</div>
+                        <div class="stat-label">إجمالي المشاهدات</div>
+                    </div>
+                    <div class="stat-item">
+                        <div id="join-date" class="stat-value">--</div>
+                        <div class="stat-label">تاريخ الانضمام</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-main">
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab('info')">المعلومات الشخصية</button>
+                    <button class="tab" onclick="switchTab('books')">كتبي</button>
+                    <button class="tab" onclick="switchTab('activity')">النشاط</button>
+                    <button class="tab" onclick="switchTab('settings')">الإعدادات</button>
+                </div>
+
+                <div id="success-message" class="success-message"></div>
+                <div id="error-message" class="error-message"></div>
+
+                <!-- Personal Info Tab -->
+                <div id="info-tab" class="tab-content active">
+                    <h3 style="color: #fff; margin-bottom: 20px;">المعلومات الشخصية</h3>
+                    <form id="profile-form">
+                        <div class="form-group">
+                            <label>الاسم الكامل:</label>
+                            <input type="text" id="name-input" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>البريد الإلكتروني:</label>
+                            <input type="email" id="email-input" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>نبذة عني:</label>
+                            <textarea id="bio-input" class="form-control" rows="4" placeholder="اكتب نبذة قصيرة عن نفسك..."></textarea>
+                        </div>
+                        <button type="submit" class="btn">حفظ التغييرات</button>
+                    </form>
+                </div>
+
+                <!-- My Books Tab -->
+                <div id="books-tab" class="tab-content">
+                    <h3 style="color: #fff; margin-bottom: 20px;">كتبي المرفوعة</h3>
+                    <div id="my-books" class="books-grid">
+                        <!-- Books will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Activity Tab -->
+                <div id="activity-tab" class="tab-content">
+                    <h3 style="color: #fff; margin-bottom: 20px;">سجل النشاط</h3>
+                    <div id="activity-list">
+                        <!-- Activity items will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Settings Tab -->
+                <div id="settings-tab" class="tab-content">
+                    <h3 style="color: #fff; margin-bottom: 20px;">الإعدادات</h3>
+                    
+                    <div style="margin-bottom: 30px;">
+                        <h4 style="color: #fff; margin-bottom: 15px;">تغيير كلمة المرور</h4>
+                        <form id="password-form">
+                            <div class="form-group">
+                                <label>كلمة المرور الحالية:</label>
+                                <input type="password" id="current-password" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>كلمة المرور الجديدة:</label>
+                                <input type="password" id="new-password" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>تأكيد كلمة المرور الجديدة:</label>
+                                <input type="password" id="confirm-password" class="form-control" required>
+                            </div>
+                            <button type="submit" class="btn">تغيير كلمة المرور</button>
+                        </form>
+                    </div>
+
+                    <div style="margin-bottom: 30px;">
+                        <h4 style="color: #fff; margin-bottom: 15px;">الإشعارات</h4>
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; cursor: pointer;">
+                                <input type="checkbox" id="email-notifications" checked>
+                                <span style="margin-right: 10px;">استلام إشعارات عبر البريد الإلكتروني</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; cursor: pointer;">
+                                <input type="checkbox" id="book-notifications" checked>
+                                <span style="margin-right: 10px;">إشعارات عند نشر كتاب جديد</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 style="color: #fff; margin-bottom: 15px;">الحساب</h4>
+                        <button class="btn btn-danger" onclick="deleteAccount()">حذف الحساب</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Supabase
+        const { createClient } = supabase;
+        const supabase = createClient(
+            'https://fyydjnzmpjwtedrzbzck.supabase.co',
+            'sb_publishable_YBDpVlQXcEazTGb-_Aj1Uw_ZIC0YYfO'
+        );
+
+        let currentUser = null;
+        let userBooks = [];
+        let userActivity = [];
+
+        // Check if user is logged in
+        function checkAuth() {
+            const userData = localStorage.getItem('lubab_current_user');
+            if (!userData) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            currentUser = JSON.parse(userData);
+            loadUserProfile();
+        }
+
+        // Load user profile
+        function loadUserProfile() {
+            // Update header
+            document.getElementById('user-avatar').src = currentUser.avatar;
+            document.getElementById('user-name').textContent = currentUser.name;
+
+            // Update profile sidebar
+            document.getElementById('profile-name').textContent = currentUser.name;
+            document.getElementById('profile-email').textContent = currentUser.email;
+            document.getElementById('avatar-text').textContent = currentUser.name.charAt(0).toUpperCase();
+            
+            // Update form fields
+            document.getElementById('name-input').value = currentUser.name;
+            document.getElementById('email-input').value = currentUser.email;
+
+            // Load statistics
+            loadUserStats();
+            
+            // Load books
+            loadUserBooks();
+            
+            // Load activity
+            loadUserActivity();
+        }
+
+        // Load user statistics
+        async function loadUserStats() {
+            try {
+                const { data: books, error } = await supabase
+                    .from('books')
+                    .select('*')
+                    .eq('user_email', currentUser.email);
+
+                if (error) throw error;
+
+                userBooks = books || [];
+                
+                const uploadedBooks = userBooks.length;
+                const approvedBooks = userBooks.filter(book => book.status === 'approved').length;
+                const totalViews = userBooks.reduce((sum, book) => sum + (book.views || 0), 0);
+                const joinDate = currentUser.joinDate || '--';
+
+                document.getElementById('uploaded-books').textContent = uploadedBooks;
+                document.getElementById('approved-books').textContent = approvedBooks;
+                document.getElementById('total-views').textContent = totalViews;
+                document.getElementById('join-date').textContent = joinDate;
+
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        // Load user books
+        function loadUserBooks() {
+            const booksGrid = document.getElementById('my-books');
+            
+            if (userBooks.length === 0) {
+                booksGrid.innerHTML = '<div class="empty-state">لم تقم برفع أي كتب بعد</div>';
+                return;
+            }
+
+            booksGrid.innerHTML = userBooks.map(book => `
+                <div class="book-card" onclick="viewBook('${book.id}')">
+                    <h4 class="book-title">${book.title}</h4>
+                    <p class="book-author">${book.author}</p>
+                    <div class="book-meta">
+                        <span>${book.uploadDate}</span>
+                        <span class="book-status status-${book.status}">${getStatusText(book.status)}</span>
+                    </div>
+                    <div style="font-size: 0.8rem; color: #666; margin-top: 10px;">
+                        المشاهدات: ${book.views || 0} | الإعجابات: ${book.likes || 0}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Load user activity
+        function loadUserActivity() {
+            const activityList = document.getElementById('activity-list');
+            
+            // Create mock activity data
+            const activities = [];
+            
+            userBooks.forEach(book => {
+                activities.push({
+                    type: 'upload',
+                    text: `قمت برفع كتاب "${book.title}"`,
+                    date: book.uploadDate
+                });
+                
+                if (book.status === 'approved') {
+                    activities.push({
+                        type: 'approved',
+                        text: `تم اعتماد كتاب "${book.title}"`,
+                        date: book.uploadDate
+                    });
+                }
+            });
+
+            // Sort by date
+            activities.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            if (activities.length === 0) {
+                activityList.innerHTML = '<div class="empty-state">لا يوجد نشاط مسجل</div>';
+                return;
+            }
+
+            activityList.innerHTML = activities.map(activity => `
+                <div class="activity-item">
+                    <div class="activity-text">${activity.text}</div>
+                    <div class="activity-date">${activity.date}</div>
+                </div>
+            `).join('');
+        }
+
+        // Tab switching
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+        }
+
+        // Profile form submission
+        document.getElementById('profile-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            try {
+                const updatedUser = {
+                    ...currentUser,
+                    name: document.getElementById('name-input').value,
+                    email: document.getElementById('email-input').value,
+                    bio: document.getElementById('bio-input').value
+                };
+
+                // Update localStorage
+                localStorage.setItem('lubab_current_user', JSON.stringify(updatedUser));
+                currentUser = updatedUser;
+
+                // Update UI
+                loadUserProfile();
+                showSuccess('تم تحديث الملف الشخصي بنجاح!');
+
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                showError('حدث خطأ أثناء تحديث الملف الشخصي');
+            }
+        });
+
+        // Password form submission
+        document.getElementById('password-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const currentPassword = document.getElementById('current-password').value;
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+
+            // Validation
+            if (newPassword !== confirmPassword) {
+                showError('كلمات المرور غير متطابقة');
+                return;
+            }
+
+            if (newPassword.length < 6) {
+                showError('كلمة المرور يجب أن تكون 6 أحرف على الأقل');
+                return;
+            }
+
+            try {
+                // In a real app, this would verify with the backend
+                const updatedUser = {
+                    ...currentUser,
+                    password: newPassword
+                };
+
+                localStorage.setItem('lubab_current_user', JSON.stringify(updatedUser));
+                currentUser = updatedUser;
+
+                // Clear form
+                document.getElementById('password-form').reset();
+                showSuccess('تم تغيير كلمة المرور بنجاح!');
+
+            } catch (error) {
+                console.error('Error changing password:', error);
+                showError('حدث خطأ أثناء تغيير كلمة المرور');
+            }
+        });
+
+        // Utility functions
+        function getStatusText(status) {
+            const statusMap = {
+                pending: 'قيد المراجعة',
+                approved: 'معتمد',
+                rejected: 'مرفوض'
+            };
+            return statusMap[status] || status;
+        }
+
+        function viewBook(bookId) {
+            window.location.href = `book-details.html?id=${bookId}`;
+        }
+
+        function deleteAccount() {
+            if (confirm('هل أنت متأكد من حذف حسابك؟ هذا الإجراء لا يمكن التراجع عنه.')) {
+                // In a real app, this would delete from database
+                localStorage.removeItem('lubab_current_user');
+                window.location.href = 'index.html';
+            }
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('success-message');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            setTimeout(() => {
+                successDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بحث متقدم - لُباب الرقمي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: #0d0d0d;
+            color: #c4c4c4;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000 100%);
+        }
+
+        .header {
+            background: rgba(20, 20, 20, 0.9);
+            border-bottom: 1px solid #333;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            color: #fff;
+            text-shadow: 2px 2px 0px #8a0303;
+            font-family: 'Courier New', Courier, monospace;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #888;
+            text-decoration: none;
+            font-family: monospace;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: #fff;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            border: 2px solid #8a0303;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            color: #fff;
+            margin-bottom: 15px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .page-subtitle {
+            color: #888;
+            font-size: 1.1rem;
+        }
+
+        .search-section {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #333;
+            padding: 40px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+        }
+
+        .search-form {
+            display: grid;
+            gap: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 8px;
+            color: #888;
+            font-family: monospace;
+            font-weight: bold;
+        }
+
+        .form-control {
+            padding: 12px;
+            background: #111;
+            border: 1px solid #333;
+            color: #fff;
+            border-radius: 4px;
+            font-family: monospace;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #8a0303;
+            box-shadow: 0 0 5px rgba(138, 3, 3, 0.3);
+        }
+
+        .search-main {
+            grid-column: 1 / -1;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1rem;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            background: #8a0303;
+            color: #fff;
+            border: 1px solid #8a0303;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-family: monospace;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: #a50404;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(138, 3, 3, 0.3);
+        }
+
+        .btn-secondary {
+            background: #111;
+            border-color: #333;
+            color: #fff;
+        }
+
+        .btn-secondary:hover {
+            background: #222;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .form-actions .btn {
+            flex: 1;
+        }
+
+        .results-section {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #333;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #333;
+        }
+
+        .results-title {
+            font-size: 1.5rem;
+            color: #fff;
+        }
+
+        .results-count {
+            color: #888;
+            font-family: monospace;
+        }
+
+        .sort-options {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .sort-select {
+            padding: 8px;
+            background: #111;
+            border: 1px solid #333;
+            color: #fff;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .book-card {
+            background: rgba(30, 30, 30, 0.8);
+            border: 1px solid #333;
+            padding: 25px;
+            border-radius: 8px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .book-card:hover {
+            transform: translateY(-5px);
+            border-color: #8a0303;
+        }
+
+        .book-title {
+            color: #fff;
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            font-family: monospace;
+        }
+
+        .book-author {
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .book-summary {
+            color: #bbb;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .book-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #333;
+        }
+
+        .book-stats {
+            display: flex;
+            gap: 15px;
+            font-size: 0.85rem;
+            color: #888;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .book-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 0.9rem;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .page-btn {
+            padding: 10px 15px;
+            background: #111;
+            color: #888;
+            border: 1px solid #333;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: monospace;
+            transition: all 0.3s;
+        }
+
+        .page-btn.active {
+            background: #8a0303;
+            color: #fff;
+            border-color: #8a0303;
+        }
+
+        .page-btn:hover {
+            background: #222;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #888;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
+
+        .filters-section {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #333;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+        }
+
+        .filters-title {
+            font-size: 1.3rem;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #8a0303;
+        }
+
+        .checkbox-item label {
+            cursor: pointer;
+            color: #bbb;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 10px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .results-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            .books-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="dashboard.html" class="logo">لُباب الرقمي</a>
+            <nav class="nav-links">
+                <a href="dashboard.html" class="nav-link">لوحة التحكم</a>
+                <a href="books.html" class="nav-link">المكتبة</a>
+                <a href="upload.html" class="nav-link">رفع كتاب</a>
+                <a href="search.html" class="nav-link">بحث</a>
+            </nav>
+            <div class="user-info">
+                <img id="user-avatar" src="" alt="User Avatar" class="user-avatar">
+                <span id="user-name" style="color: #fff; font-family: monospace;"></span>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">بحث متقدم</h1>
+            <p class="page-subtitle">ابحث عن الكتب والمؤلفين والمحتوى الثقافي</p>
+        </div>
+
+        <div class="search-section">
+            <form class="search-form" id="advanced-search-form">
+                <div class="search-main">
+                    <input type="text" id="main-search" class="form-control search-input" placeholder="ابحث عن كتب، مؤلفين، أو كلمات مفتاحية...">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>المؤلف:</label>
+                        <input type="text" id="author-search" class="form-control" placeholder="اسم المؤلف">
+                    </div>
+                    <div class="form-group">
+                        <label>عنوان الكتاب:</label>
+                        <input type="text" id="title-search" class="form-control" placeholder="عنوان الكتاب">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>التصنيف:</label>
+                        <select id="category-search" class="form-control">
+                            <option value="">جميع التصنيفات</option>
+                            <option value="literature">أدبي</option>
+                            <option value="political">سياسي</option>
+                            <option value="historical">تاريخي</option>
+                            <option value="religious">ديني</option>
+                            <option value="philosophical">فلسفي</option>
+                            <option value="scientific">علمي</option>
+                            <option value="social">اجتماعي</option>
+                            <option value="economic">اقتصادي</option>
+                            <option value="art">فني</option>
+                            <option value="biography">سيرة ذاتية</option>
+                            <option value="visions">رؤيات</option>
+                            <option value="stories">قصص</option>
+                            <option value="other">أخرى</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>تاريخ النشر:</label>
+                        <select id="date-search" class="form-control">
+                            <option value="">أي وقت</option>
+                            <option value="today">اليوم</option>
+                            <option value="week">هذا الأسبوع</option>
+                            <option value="month">هذا الشهر</option>
+                            <option value="year">هذا العام</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>الحد الأدنى للصفحات:</label>
+                        <input type="number" id="min-pages" class="form-control" placeholder="مثال: 100">
+                    </div>
+                    <div class="form-group">
+                        <label>الحد الأقصى للصفحات:</label>
+                        <input type="number" id="max-pages" class="form-control" placeholder="مثال: 500">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn">بحث</button>
+                    <button type="button" class="btn btn-secondary" onclick="clearSearch()">مسح البحث</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="filters-section">
+            <h3 class="filters-title">خيارات إضافية</h3>
+            <div class="checkbox-group">
+                <div class="checkbox-item">
+                    <input type="checkbox" id="only-approved" checked>
+                    <label for="only-approved">الكتب المعتمدة فقط</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="has-downloads">
+                    <label for="has-downloads">متاح للتحميل</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="recent-first">
+                    <label for="recent-first">الأحدث أولاً</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="high-rated">
+                    <label for="high-rated">ذو تقييم عالي</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="results-section" id="results-section" style="display: none;">
+            <div class="results-header">
+                <h2 class="results-title">نتائج البحث</h2>
+                <div class="results-count">
+                    <span id="results-count-text">0 نتيجة</span>
+                </div>
+                <div class="sort-options">
+                    <label style="color: #888;">ترتيب حسب:</label>
+                    <select id="sort-results" class="sort-select" onchange="sortResults()">
+                        <option value="relevance">الصلة</option>
+                        <option value="newest">الأحدث</option>
+                        <option value="oldest">الأقدم</option>
+                        <option value="title">العنوان</option>
+                        <option value="author">المؤلف</option>
+                        <option value="rating">التقييم</option>
+                        <option value="views">المشاهدات</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="loading" class="loading" style="display: none;">
+                <p>جاري البحث...</p>
+            </div>
+
+            <div id="search-results" class="books-grid">
+                <!-- Results will be loaded here -->
+            </div>
+
+            <div class="pagination" id="pagination">
+                <!-- Pagination will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Supabase
+        const { createClient } = supabase;
+        const supabase = createClient(
+            'https://fyydjnzmpjwtedrzbzck.supabase.co',
+            'sb_publishable_YBDpVlQXcEazTGb-_Aj1Uw_ZIC0YYfO'
+        );
+
+        let searchResults = [];
+        let currentPage = 1;
+        let resultsPerPage = 12;
+        let currentUser = null;
+
+        // Check if user is logged in
+        function checkAuth() {
+            const userData = localStorage.getItem('lubab_current_user');
+            if (userData) {
+                currentUser = JSON.parse(userData);
+                document.getElementById('user-avatar').src = currentUser.avatar;
+                document.getElementById('user-name').textContent = currentUser.name;
+            }
+        }
+
+        // Advanced search form submission
+        document.getElementById('advanced-search-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            currentPage = 1;
+            await performSearch();
+        });
+
+        // Perform search
+        async function performSearch() {
+            const resultsSection = document.getElementById('results-section');
+            const loading = document.getElementById('loading');
+            const resultsGrid = document.getElementById('search-results');
+
+            resultsSection.style.display = 'block';
+            loading.style.display = 'block';
+            resultsGrid.innerHTML = '';
+
+            try {
+                // Get search criteria
+                const mainSearch = document.getElementById('main-search').value.toLowerCase();
+                const authorSearch = document.getElementById('author-search').value.toLowerCase();
+                const titleSearch = document.getElementById('title-search').value.toLowerCase();
+                const category = document.getElementById('category-search').value;
+                const dateFilter = document.getElementById('date-search').value;
+                const minPages = parseInt(document.getElementById('min-pages').value) || 0;
+                const maxPages = parseInt(document.getElementById('max-pages').value) || 999999;
+                const onlyApproved = document.getElementById('only-approved').checked;
+                const recentFirst = document.getElementById('recent-first').checked;
+                const highRated = document.getElementById('high-rated').checked;
+
+                // Build query
+                let query = supabase.from('books').select('*');
+
+                // Apply filters
+                if (onlyApproved) {
+                    query = query.eq('status', 'approved');
+                }
+
+                if (category) {
+                    query = query.eq('category', category);
+                }
+
+                if (minPages > 0) {
+                    query = query.gte('pageCount', minPages);
+                }
+
+                if (maxPages < 999999) {
+                    query = query.lte('pageCount', maxPages);
+                }
+
+                // Date filter
+                if (dateFilter) {
+                    const today = new Date();
+                    let filterDate = new Date();
+
+                    switch(dateFilter) {
+                        case 'today':
+                            filterDate.setHours(0, 0, 0, 0);
+                            break;
+                        case 'week':
+                            filterDate.setDate(today.getDate() - 7);
+                            break;
+                        case 'month':
+                            filterDate.setMonth(today.getMonth() - 1);
+                            break;
+                        case 'year':
+                            filterDate.setFullYear(today.getFullYear() - 1);
+                            break;
+                    }
+
+                    query = query.gte('uploadDate', filterDate.toISOString().split('T')[0]);
+                }
+
+                // Execute query
+                const { data: books, error } = await query;
+
+                if (error) throw error;
+
+                // Filter results based on text search
+                searchResults = books.filter(book => {
+                    let matches = true;
+
+                    if (mainSearch) {
+                        matches = matches && (
+                            book.title.toLowerCase().includes(mainSearch) ||
+                            book.author.toLowerCase().includes(mainSearch) ||
+                            book.summary.toLowerCase().includes(mainSearch)
+                        );
+                    }
+
+                    if (authorSearch) {
+                        matches = matches && book.author.toLowerCase().includes(authorSearch);
+                    }
+
+                    if (titleSearch) {
+                        matches = matches && book.title.toLowerCase().includes(titleSearch);
+                    }
+
+                    if (highRated && (!book.rating || book.rating < 4)) {
+                        matches = false;
+                    }
+
+                    return matches;
+                });
+
+                // Apply sorting
+                if (recentFirst) {
+                    searchResults.sort((a, b) => new Date(b.uploadDate) - new Date(a.uploadDate));
+                }
+
+                displayResults();
+
+            } catch (error) {
+                console.error('Search error:', error);
+                resultsGrid.innerHTML = '<div class="empty-state"><h3>حدث خطأ أثناء البحث</h3><p>الرجاء المحاولة مرة أخرى</p></div>';
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+
+        // Display search results
+        function displayResults() {
+            const resultsGrid = document.getElementById('search-results');
+            const resultsCount = document.getElementById('results-count-text');
+            const pagination = document.getElementById('pagination');
+
+            const startIndex = (currentPage - 1) * resultsPerPage;
+            const endIndex = startIndex + resultsPerPage;
+            const paginatedResults = searchResults.slice(startIndex, endIndex);
+
+            resultsCount.textContent = `${searchResults.length} نتيجة`;
+
+            if (paginatedResults.length === 0) {
+                resultsGrid.innerHTML = `
+                    <div class="empty-state">
+                        <h3>لا توجد نتائج</h3>
+                        <p>جرب تعديل معايير البحث</p>
+                    </div>
+                `;
+                pagination.innerHTML = '';
+                return;
+            }
+
+            const categories = {
+                literature: 'أدبي',
+                political: 'سياسي',
+                historical: 'تاريخي',
+                religious: 'ديني',
+                philosophical: 'فلسفي',
+                scientific: 'علمي',
+                social: 'اجتماعي',
+                economic: 'اقتصادي',
+                art: 'فني',
+                biography: 'سيرة ذاتية',
+                visions: 'رؤيات',
+                stories: 'قصص',
+                other: 'أخرى'
+            };
+
+            resultsGrid.innerHTML = paginatedResults.map(book => `
+                <div class="book-card" onclick="viewBook('${book.id}')">
+                    <h3 class="book-title">${book.title}</h3>
+                    <p class="book-author">المؤلف: ${book.author}</p>
+                    <p class="book-summary">${book.summary}</p>
+                    <div class="book-stats">
+                        <div class="stat-item">المشاهدات: ${book.views || 0}</div>
+                        <div class="stat-item">الإعجابات: ${book.likes || 0}</div>
+                        <div class="stat-item">الصفحات: ${book.pageCount}</div>
+                    </div>
+                    <div class="book-meta">
+                        <span>${book.uploadDate}</span>
+                        <span>${categories[book.category] || 'غير مصنف'}</span>
+                    </div>
+                    <div class="book-actions">
+                        <button class="btn btn-small btn-primary" onclick="event.stopPropagation(); viewBook('${book.id}')">عرض</button>
+                        <button class="btn btn-small btn-secondary" onclick="event.stopPropagation(); downloadBook('${book.id}')">تحميل</button>
+                    </div>
+                </div>
+            `).join('');
+
+            displayPagination();
+        }
+
+        // Display pagination
+        function displayPagination() {
+            const pagination = document.getElementById('pagination');
+            const totalPages = Math.ceil(searchResults.length / resultsPerPage);
+
+            if (totalPages <= 1) {
+                pagination.innerHTML = '';
+                return;
+            }
+
+            let paginationHTML = '';
+
+            // Previous button
+            if (currentPage > 1) {
+                paginationHTML += `<button class="page-btn" onclick="goToPage(${currentPage - 1})">السابق</button>`;
+            }
+
+            // Page numbers
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === currentPage) {
+                    paginationHTML += `<button class="page-btn active">${i}</button>`;
+                } else {
+                    paginationHTML += `<button class="page-btn" onclick="goToPage(${i})">${i}</button>`;
+                }
+            }
+
+            // Next button
+            if (currentPage < totalPages) {
+                paginationHTML += `<button class="page-btn" onclick="goToPage(${currentPage + 1})">التالي</button>`;
+            }
+
+            pagination.innerHTML = paginationHTML;
+        }
+
+        // Go to page
+        function goToPage(page) {
+            currentPage = page;
+            displayResults();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Sort results
+        function sortResults() {
+            const sortBy = document.getElementById('sort-results').value;
+
+            switch(sortBy) {
+                case 'newest':
+                    searchResults.sort((a, b) => new Date(b.uploadDate) - new Date(a.uploadDate));
+                    break;
+                case 'oldest':
+                    searchResults.sort((a, b) => new Date(a.uploadDate) - new Date(b.uploadDate));
+                    break;
+                case 'title':
+                    searchResults.sort((a, b) => a.title.localeCompare(b.title));
+                    break;
+                case 'author':
+                    searchResults.sort((a, b) => a.author.localeCompare(b.author));
+                    break;
+                case 'rating':
+                    searchResults.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+                    break;
+                case 'views':
+                    searchResults.sort((a, b) => (b.views || 0) - (a.views || 0));
+                    break;
+                case 'relevance':
+                default:
+                    // Keep original order
+                    break;
+            }
+
+            currentPage = 1;
+            displayResults();
+        }
+
+        // Clear search
+        function clearSearch() {
+            document.getElementById('advanced-search-form').reset();
+            document.getElementById('results-section').style.display = 'none';
+            searchResults = [];
+            currentPage = 1;
+        }
+
+        // View book
+        function viewBook(bookId) {
+            window.location.href = `book-details.html?id=${bookId}`;
+        }
+
+        // Download book
+        function downloadBook(bookId) {
+            // In a real app, this would download the book
+            alert('جاري تحميل الكتاب...');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+        });
+    </script>
+</body>
+</html>

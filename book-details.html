@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تفاصيل الكتاب - لُباب الرقمي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: #0d0d0d;
+            color: #c4c4c4;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000 100%);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: rgba(20, 20, 20, 0.9);
+            border-bottom: 1px solid #333;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            color: #fff;
+            text-shadow: 2px 2px 0px #8a0303;
+            font-family: 'Courier New', Courier, monospace;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #888;
+            text-decoration: none;
+            font-family: monospace;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: #fff;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            border: 2px solid #8a0303;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .book-container {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .book-cover-section {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #333;
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .book-cover {
+            width: 100%;
+            max-width: 300px;
+            height: 400px;
+            background: linear-gradient(135deg, #8a0303, #a50404);
+            border-radius: 8px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.2rem;
+            font-family: monospace;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .book-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-family: monospace;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: #8a0303;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #a50404;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #111;
+            color: #fff;
+            border: 1px solid #333;
+        }
+
+        .btn-secondary:hover {
+            background: #222;
+        }
+
+        .book-info-section {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #333;
+            padding: 30px;
+            border-radius: 8px;
+        }
+
+        .book-title {
+            font-size: 2.5rem;
+            color: #fff;
+            margin-bottom: 15px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .book-author {
+            font-size: 1.3rem;
+            color: #8a0303;
+            margin-bottom: 20px;
+        }
+
+        .book-meta {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+            padding: 20px 0;
+            border-bottom: 1px solid #333;
+            border-top: 1px solid #333;
+        }
+
+        .meta-item {
+            text-align: center;
+        }
+
+        .meta-value {
+            font-size: 1.5rem;
+            color: #fff;
+            font-weight: bold;
+            font-family: monospace;
+        }
+
+        .meta-label {
+            color: #888;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .book-summary {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: #fff;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #8a0303;
+            padding-bottom: 10px;
+        }
+
+        .summary-text {
+            color: #bbb;
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        .book-stats {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #888;
+            font-family: monospace;
+        }
+
+        .categories-section {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #333;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+        }
+
+        .category-badge {
+            display: inline-block;
+            background: #8a0303;
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin: 5px;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .reviews-section {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #333;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+        }
+
+        .review-form {
+            background: rgba(138, 3, 3, 0.1);
+            border: 1px solid #8a0303;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #888;
+            font-family: monospace;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            background: #111;
+            border: 1px solid #333;
+            color: #fff;
+            border-radius: 4px;
+            font-family: monospace;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #8a0303;
+            box-shadow: 0 0 5px rgba(138, 3, 3, 0.3);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .rating-input {
+            display: flex;
+            gap: 10px;
+            font-size: 1.5rem;
+        }
+
+        .star {
+            cursor: pointer;
+            color: #333;
+            transition: color 0.3s;
+        }
+
+        .star:hover,
+        .star.active {
+            color: #ffd700;
+        }
+
+        .reviews-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .review-item {
+            background: rgba(30, 30, 30, 0.8);
+            border: 1px solid #333;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .reviewer-name {
+            color: #fff;
+            font-weight: bold;
+            font-family: monospace;
+        }
+
+        .review-rating {
+            color: #ffd700;
+        }
+
+        .review-date {
+            color: #666;
+            font-size: 0.9rem;
+            font-family: monospace;
+        }
+
+        .review-text {
+            color: #bbb;
+            line-height: 1.6;
+        }
+
+        .related-books {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #333;
+            padding: 30px;
+            border-radius: 8px;
+        }
+
+        .related-books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .related-book-card {
+            background: rgba(30, 30, 30, 0.8);
+            border: 1px solid #333;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .related-book-card:hover {
+            transform: translateY(-5px);
+            border-color: #8a0303;
+        }
+
+        .related-book-title {
+            color: #fff;
+            font-size: 1rem;
+            margin-bottom: 10px;
+            font-family: monospace;
+        }
+
+        .related-book-author {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .error-message {
+            color: #ff4444;
+            background: rgba(255, 68, 68, 0.1);
+            border: 1px solid #ff4444;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-family: monospace;
+            text-align: center;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
+
+        @media (max-width: 768px) {
+            .book-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .book-cover {
+                max-width: 200px;
+                height: 280px;
+            }
+
+            .book-title {
+                font-size: 1.8rem;
+            }
+
+            .book-meta {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="dashboard.html" class="logo">لُباب الرقمي</a>
+            <nav class="nav-links">
+                <a href="dashboard.html" class="nav-link">لوحة التحكم</a>
+                <a href="books.html" class="nav-link">المكتبة</a>
+                <a href="upload.html" class="nav-link">رفع كتاب</a>
+                <a href="search.html" class="nav-link">بحث</a>
+            </nav>
+            <div class="user-info">
+                <img id="user-avatar" src="" alt="User Avatar" class="user-avatar">
+                <span id="user-name" style="color: #fff; font-family: monospace;"></span>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div id="loading" class="loading">
+            <p>جاري تحميل تفاصيل الكتاب...</p>
+        </div>
+
+        <div id="error-container" class="error-message" style="display: none;">
+            <p>حدث خطأ أثناء تحميل الكتاب. الرجاء المحاولة مرة أخرى.</p>
+        </div>
+
+        <div id="book-content" style="display: none;">
+            <div class="book-container">
+                <div class="book-cover-section">
+                    <div id="book-cover" class="book-cover">
+                        <span id="cover-text">غلاف الكتاب</span>
+                    </div>
+                    <div class="book-actions">
+                        <button class="btn btn-primary" onclick="downloadBook()">تحميل الكتاب</button>
+                        <button class="btn btn-secondary" onclick="readOnline()">قراءة أونلاين</button>
+                        <button class="btn btn-secondary" onclick="addToFavorites()">إضافة للمفضلة</button>
+                    </div>
+                </div>
+
+                <div class="book-info-section">
+                    <h1 id="book-title" class="book-title">اسم الكتاب</h1>
+                    <p id="book-author" class="book-author">المؤلف: اسم المؤلف</p>
+
+                    <div class="book-meta">
+                        <div class="meta-item">
+                            <div id="page-count" class="meta-value">0</div>
+                            <div class="meta-label">صفحة</div>
+                        </div>
+                        <div class="meta-item">
+                            <div id="views-count" class="meta-value">0</div>
+                            <div class="meta-label">مشاهدة</div>
+                        </div>
+                        <div class="meta-item">
+                            <div id="likes-count" class="meta-value">0</div>
+                            <div class="meta-label">إعجاب</div>
+                        </div>
+                        <div class="meta-item">
+                            <div id="rating" class="meta-value">0.0</div>
+                            <div class="meta-label">تقييم</div>
+                        </div>
+                    </div>
+
+                    <div class="book-stats">
+                        <div class="stat-item">
+                            <span>📅</span>
+                            <span id="upload-date">تاريخ الرفع</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>📁</span>
+                            <span id="category">التصنيف</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>📊</span>
+                            <span id="status">الحالة</span>
+                        </div>
+                    </div>
+
+                    <div class="book-summary">
+                        <h2 class="section-title">ملخص الكتاب</h2>
+                        <p id="summary-text" class="summary-text">ملخص الكتاب سيظهر هنا...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="categories-section">
+                <h2 class="section-title">التصنيفات</h2>
+                <div id="categories-list">
+                    <span class="category-badge">أدبي</span>
+                </div>
+            </div>
+
+            <div class="reviews-section">
+                <h2 class="section-title">التقييمات والمراجعات</h2>
+                
+                <div class="review-form">
+                    <h3 style="color: #fff; margin-bottom: 20px;">أضف تقييمك</h3>
+                    <div class="form-group">
+                        <label>التقييم:</label>
+                        <div class="rating-input" id="rating-input">
+                            <span class="star" data-rating="1">★</span>
+                            <span class="star" data-rating="2">★</span>
+                            <span class="star" data-rating="3">★</span>
+                            <span class="star" data-rating="4">★</span>
+                            <span class="star" data-rating="5">★</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>مراجعتك:</label>
+                        <textarea id="review-text" class="form-control" placeholder="اكتب مراجعتك للكتاب..."></textarea>
+                    </div>
+                    <button class="btn btn-primary" onclick="submitReview()">إرسال التقييم</button>
+                </div>
+
+                <div class="reviews-list" id="reviews-list">
+                    <!-- Reviews will be loaded here -->
+                </div>
+            </div>
+
+            <div class="related-books">
+                <h2 class="section-title">كتب ذات صلة</h2>
+                <div class="related-books-grid" id="related-books-grid">
+                    <!-- Related books will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Supabase
+        const { createClient } = supabase;
+        const supabase = createClient(
+            'https://fyydjnzmpjwtedrzbzck.supabase.co',
+            'sb_publishable_YBDpVlQXcEazTGb-_Aj1Uw_ZIC0YYfO'
+        );
+
+        // Get book ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const bookId = urlParams.get('id');
+
+        let currentBook = null;
+        let currentUser = null;
+        let userRating = 0;
+
+        // Check if user is logged in
+        function checkAuth() {
+            const userData = localStorage.getItem('lubab_current_user');
+            if (userData) {
+                currentUser = JSON.parse(userData);
+                document.getElementById('user-avatar').src = currentUser.avatar;
+                document.getElementById('user-name').textContent = currentUser.name;
+            }
+        }
+
+        // Load book details
+        async function loadBookDetails() {
+            try {
+                const { data: book, error } = await supabase
+                    .from('books')
+                    .select('*')
+                    .eq('id', bookId)
+                    .single();
+
+                if (error) throw error;
+
+                currentBook = book;
+                displayBookDetails(book);
+                loadReviews();
+                loadRelatedBooks();
+                
+                // Increment views
+                await incrementViews(bookId);
+
+            } catch (error) {
+                console.error('Error loading book:', error);
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error-container').style.display = 'block';
+            }
+        }
+
+        // Display book details
+        function displayBookDetails(book) {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('book-content').style.display = 'block';
+
+            document.getElementById('book-title').textContent = book.title;
+            document.getElementById('book-author').textContent = `المؤلف: ${book.author}`;
+            document.getElementById('page-count').textContent = book.pageCount;
+            document.getElementById('views-count').textContent = book.views || 0;
+            document.getElementById('likes-count').textContent = book.likes || 0;
+            document.getElementById('rating').textContent = (book.rating || 0).toFixed(1);
+            document.getElementById('upload-date').textContent = book.uploadDate;
+            document.getElementById('summary-text').textContent = book.summary;
+
+            // Set category
+            const categories = {
+                literature: 'أدبي',
+                political: 'سياسي',
+                historical: 'تاريخي',
+                religious: 'ديني',
+                philosophical: 'فلسفي',
+                scientific: 'علمي',
+                social: 'اجتماعي',
+                economic: 'اقتصادي',
+                art: 'فني',
+                biography: 'سيرة ذاتية',
+                visions: 'رؤيات',
+                stories: 'قصص',
+                other: 'أخرى'
+            };
+            
+            const categoryName = categories[book.category] || 'غير مصنف';
+            document.getElementById('category').textContent = categoryName;
+            document.getElementById('categories-list').innerHTML = `<span class="category-badge">${categoryName}</span>`;
+
+            // Set status
+            const statusText = book.status === 'approved' ? 'معتمد' : 'قيد المراجعة';
+            document.getElementById('status').textContent = statusText;
+
+            // Set cover text
+            document.getElementById('cover-text').textContent = book.title.substring(0, 50);
+        }
+
+        // Load reviews
+        async function loadReviews() {
+            try {
+                const { data: reviews, error } = await supabase
+                    .from('reviews')
+                    .select('*')
+                    .eq('book_id', bookId)
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                displayReviews(reviews);
+            } catch (error) {
+                console.error('Error loading reviews:', error);
+            }
+        }
+
+        // Display reviews
+        function displayReviews(reviews) {
+            const reviewsList = document.getElementById('reviews-list');
+            
+            if (reviews.length === 0) {
+                reviewsList.innerHTML = '<p style="text-align: center; color: #888;">لا توجد تقييمات بعد. كن أول من يقيم!</p>';
+                return;
+            }
+
+            reviewsList.innerHTML = reviews.map(review => `
+                <div class="review-item">
+                    <div class="review-header">
+                        <div>
+                            <div class="reviewer-name">${review.user_name}</div>
+                            <div class="review-date">${new Date(review.created_at).toLocaleDateString('ar-SA')}</div>
+                        </div>
+                        <div class="review-rating">${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</div>
+                    </div>
+                    <div class="review-text">${review.review_text}</div>
+                </div>
+            `).join('');
+        }
+
+        // Load related books
+        async function loadRelatedBooks() {
+            try {
+                const { data: books, error } = await supabase
+                    .from('books')
+                    .select('*')
+                    .eq('status', 'approved')
+                    .neq('id', bookId)
+                    .eq('category', currentBook.category)
+                    .limit(6);
+
+                if (error) throw error;
+
+                displayRelatedBooks(books);
+            } catch (error) {
+                console.error('Error loading related books:', error);
+            }
+        }
+
+        // Display related books
+        function displayRelatedBooks(books) {
+            const grid = document.getElementById('related-books-grid');
+            
+            if (books.length === 0) {
+                grid.innerHTML = '<p style="text-align: center; color: #888;">لا توجد كتب ذات صلة</p>';
+                return;
+            }
+
+            grid.innerHTML = books.map(book => `
+                <div class="related-book-card" onclick="goToBook('${book.id}')">
+                    <div class="related-book-title">${book.title}</div>
+                    <div class="related-book-author">${book.author}</div>
+                </div>
+            `).join('');
+        }
+
+        // Rating system
+        document.querySelectorAll('.star').forEach(star => {
+            star.addEventListener('click', function() {
+                userRating = parseInt(this.dataset.rating);
+                updateRatingDisplay(userRating);
+            });
+
+            star.addEventListener('mouseenter', function() {
+                const rating = parseInt(this.dataset.rating);
+                updateRatingDisplay(rating);
+            });
+        });
+
+        document.getElementById('rating-input').addEventListener('mouseleave', function() {
+            updateRatingDisplay(userRating);
+        });
+
+        function updateRatingDisplay(rating) {
+            document.querySelectorAll('.star').forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+        }
+
+        // Submit review
+        async function submitReview() {
+            if (!currentUser) {
+                alert('يجب تسجيل الدخول لإضافة تقييم');
+                return;
+            }
+
+            if (userRating === 0) {
+                alert('الرجاء اختيار تقييم');
+                return;
+            }
+
+            const reviewText = document.getElementById('review-text').value;
+            if (!reviewText.trim()) {
+                alert('الرجاء كتابة مراجعة');
+                return;
+            }
+
+            try {
+                const { data, error } = await supabase
+                    .from('reviews')
+                    .insert([{
+                        book_id: bookId,
+                        user_id: currentUser.id,
+                        user_name: currentUser.name,
+                        rating: userRating,
+                        review_text: reviewText,
+                        created_at: new Date().toISOString()
+                    }]);
+
+                if (error) throw error;
+
+                // Update book rating
+                await updateBookRating();
+
+                // Clear form
+                document.getElementById('review-text').value = '';
+                userRating = 0;
+                updateRatingDisplay(0);
+
+                // Reload reviews
+                loadReviews();
+
+                alert('تم إضافة تقييمك بنجاح!');
+
+            } catch (error) {
+                console.error('Error submitting review:', error);
+                alert('حدث خطأ أثناء إضافة التقييم');
+            }
+        }
+
+        // Update book rating
+        async function updateBookRating() {
+            try {
+                const { data: reviews, error } = await supabase
+                    .from('reviews')
+                    .select('rating')
+                    .eq('book_id', bookId);
+
+                if (error) throw error;
+
+                const avgRating = reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length;
+
+                await supabase
+                    .from('books')
+                    .update({ rating: avgRating })
+                    .eq('id', bookId);
+
+            } catch (error) {
+                console.error('Error updating rating:', error);
+            }
+        }
+
+        // Increment views
+        async function incrementViews(bookId) {
+            try {
+                await supabase
+                    .from('books')
+                    .update({ views: (currentBook.views || 0) + 1 })
+                    .eq('id', bookId);
+            } catch (error) {
+                console.error('Error incrementing views:', error);
+            }
+        }
+
+        // Action functions
+        function downloadBook() {
+            if (currentBook && currentBook.fileUrl) {
+                window.open(currentBook.fileUrl, '_blank');
+            } else {
+                alert('الملف غير متاح للتحميل حالياً');
+            }
+        }
+
+        function readOnline() {
+            alert('القراءة أونلاين ستكون متاحة قريباً');
+        }
+
+        function addToFavorites() {
+            if (!currentUser) {
+                alert('يجب تسجيل الدخول لإضافة الكتاب للمفضلة');
+                return;
+            }
+            alert('تمت إضافة الكتاب للمفضلة');
+        }
+
+        function goToBook(bookId) {
+            window.location.href = `book-details.html?id=${bookId}`;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            
+            if (!bookId) {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error-container').style.display = 'block';
+                return;
+            }
+
+            loadBookDetails();
+        });
+    </script>
+</body>
+</html>

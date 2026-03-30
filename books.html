@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المكتبة - لُباب الرقمي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: #0d0d0d;
+            color: #c4c4c4;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000 100%);
+        }
+
+        .header {
+            background: rgba(20, 20, 20, 0.9);
+            border-bottom: 1px solid #333;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            color: #fff;
+            text-shadow: 2px 2px 0px #8a0303;
+            font-family: 'Courier New', Courier, monospace;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #888;
+            text-decoration: none;
+            font-family: monospace;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: #fff;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            border: 2px solid #8a0303;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 0;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            color: #fff;
+            margin-bottom: 15px;
+        }
+
+        .page-subtitle {
+            color: #888;
+            font-size: 1.1rem;
+        }
+
+        .search-section {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #333;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px;
+            background: #111;
+            border: 1px solid #333;
+            color: #fff;
+            border-radius: 4px;
+            font-family: monospace;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #8a0303;
+            box-shadow: 0 0 5px rgba(138, 3, 3, 0.3);
+        }
+
+        .search-btn {
+            padding: 12px 24px;
+            background: #8a0303;
+            color: #fff;
+            border: 1px solid #8a0303;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: monospace;
+            transition: all 0.3s;
+        }
+
+        .search-btn:hover {
+            background: #a50404;
+        }
+
+        .filters {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            padding: 8px;
+            background: #111;
+            border: 1px solid #333;
+            color: #fff;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(20, 20, 20, 0.5);
+            border-radius: 8px;
+        }
+
+        .stats-info {
+            color: #888;
+            font-family: monospace;
+        }
+
+        .view-options {
+            display: flex;
+            gap: 10px;
+        }
+
+        .view-btn {
+            padding: 8px 12px;
+            background: #111;
+            color: #888;
+            border: 1px solid #333;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: monospace;
+            transition: all 0.3s;
+        }
+
+        .view-btn.active {
+            background: #8a0303;
+            color: #fff;
+            border-color: #8a0303;
+        }
+
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .book-card {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #333;
+            padding: 25px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .book-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+        }
+
+        .book-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .book-title {
+            color: #fff;
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .book-author {
+            color: #888;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .book-category {
+            background: #8a0303;
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .book-summary {
+            color: #bbb;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .book-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #333;
+        }
+
+        .book-stats {
+            display: flex;
+            gap: 15px;
+            font-size: 0.85rem;
+            color: #888;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .book-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            font-family: monospace;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: #8a0303;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #a50404;
+        }
+
+        .btn-secondary {
+            background: #111;
+            color: #fff;
+            border: 1px solid #333;
+        }
+
+        .btn-secondary:hover {
+            background: #222;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 40px;
+        }
+
+        .page-btn {
+            padding: 10px 15px;
+            background: #111;
+            color: #888;
+            border: 1px solid #333;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: monospace;
+            transition: all 0.3s;
+        }
+
+        .page-btn.active {
+            background: #8a0303;
+            color: #fff;
+            border-color: #8a0303;
+        }
+
+        .page-btn:hover {
+            background: #222;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #888;
+        }
+
+        .upload-prompt {
+            margin-top: 20px;
+        }
+
+        .upload-prompt a {
+            color: #8a0303;
+            text-decoration: none;
+        }
+
+        .upload-prompt a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .search-form {
+                flex-direction: column;
+            }
+
+            .filters {
+                flex-direction: column;
+            }
+
+            .stats-bar {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .books-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="dashboard.html" class="logo">لُباب الرقمي</a>
+            <nav class="nav-links">
+                <a href="dashboard.html" class="nav-link">لوحة التحكم</a>
+                <a href="books.html" class="nav-link">المكتبة</a>
+                <a href="upload.html" class="nav-link">رفع كتاب</a>
+                <a href="search.html" class="nav-link">بحث متقدم</a>
+            </nav>
+            <div class="user-info">
+                <img id="user-avatar" src="" alt="User Avatar" class="user-avatar">
+                <span id="user-name" style="color: #fff; font-family: monospace;"></span>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">المكتبة الرقمية</h1>
+            <p class="page-subtitle">استكشف مجموعتنا المتنوعة من الكتب والمحتوى الثقافي</p>
+        </div>
+
+        <div class="search-section">
+            <form class="search-form" onsubmit="searchBooks(event)">
+                <input type="text" id="search-input" class="search-input" placeholder="ابحث عن كتب، مؤلفين، أو كلمات مفتاحية...">
+                <button type="submit" class="search-btn">بحث</button>
+            </form>
+            
+            <div class="filters">
+                <select id="category-filter" class="filter-select" onchange="filterBooks()">
+                    <option value="">جميع التصنيفات</option>
+                    <option value="literature">أدبي</option>
+                    <option value="political">سياسي</option>
+                    <option value="historical">تاريخي</option>
+                    <option value="religious">ديني</option>
+                    <option value="philosophical">فلسفي</option>
+                    <option value="scientific">علمي</option>
+                    <option value="social">اجتماعي</option>
+                    <option value="economic">اقتصادي</option>
+                    <option value="art">فني</option>
+                    <option value="biography">سيرة ذاتية</option>
+                    <option value="visions">رؤيات</option>
+                    <option value="stories">قصص</option>
+                    <option value="other">أخرى</option>
+                </select>
+                
+                <select id="sort-filter" class="filter-select" onchange="sortBooks()">
+                    <option value="newest">الأحدث أولاً</option>
+                    <option value="oldest">الأقدم أولاً</option>
+                    <option value="title">حسب العنوان</option>
+                    <option value="author">حسب المؤلف</option>
+                    <option value="popular">الأكثر شعبية</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stats-info">
+                <span id="books-count">0</span> كتاب متاح
+            </div>
+            <div class="view-options">
+                <button class="view-btn active" onclick="setView('grid')">شبكة</button>
+                <button class="view-btn" onclick="setView('list')">قائمة</button>
+            </div>
+        </div>
+
+        <div id="books-container" class="books-grid"></div>
+
+        <div class="pagination" id="pagination"></div>
+    </div>
+
+    <script>
+        // Check if user is logged in
+        function checkAuth() {
+            const currentUser = localStorage.getItem('lubab_current_user');
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            const user = JSON.parse(currentUser);
+            document.getElementById('user-avatar').src = user.avatar;
+            document.getElementById('user-name').textContent = user.name;
+        }
+
+        // Load books data
+        let allBooks = [];
+        let filteredBooks = [];
+        let currentPage = 1;
+        const booksPerPage = 12;
+
+        function loadBooks() {
+            // Get books from admin panel storage
+            const adminBooks = JSON.parse(localStorage.getItem('lubab_admin_books') || '[]');
+            allBooks = adminBooks.filter(book => book.status === 'approved');
+            
+            // Add some mock data if no books exist
+            if (allBooks.length === 0) {
+                allBooks = [
+                    {
+                        id: '1',
+                        title: 'فلسفة العبث',
+                        author: 'أحمد عبدالله',
+                        summary: 'يناقش هذا الكتاب العبثية في الحياة اليومية، وكيف يمكن للإنسان إيجاد المعنى في عالم يبدو بلا هدف.',
+                        pageCount: 245,
+                        views: 1234,
+                        likes: 89,
+                        uploadDate: '2024-01-15',
+                        category: 'philosophical'
+                    },
+                    {
+                        id: '2',
+                        title: 'تاريخ الظلال',
+                        author: 'سارة محمد',
+                        summary: 'سرد تاريخي للأحداث التي لم تُكتب في الكتب الرسمية. مؤامرات، أسرار، وحقائق تم طمسها عمداً.',
+                        pageCount: 156,
+                        views: 892,
+                        likes: 67,
+                        uploadDate: '2024-02-20',
+                        category: 'political'
+                    }
+                ];
+            }
+            
+            filteredBooks = [...allBooks];
+            displayBooks();
+        }
+
+        function displayBooks() {
+            const container = document.getElementById('books-container');
+            const startIndex = (currentPage - 1) * booksPerPage;
+            const endIndex = startIndex + booksPerPage;
+            const booksToShow = filteredBooks.slice(startIndex, endIndex);
+            
+            document.getElementById('books-count').textContent = filteredBooks.length;
+            
+            if (booksToShow.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>لا توجد كتب متاحة حالياً</h3>
+                        <p>كن أول من يشارك كتاباً مع المجتمع!</p>
+                        <div class="upload-prompt">
+                            <a href="upload.html">ارفع كتابك الآن →</a>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('pagination').innerHTML = '';
+                return;
+            }
+            
+            const categories = {
+                literature: 'أدبي',
+                political: 'سياسي',
+                historical: 'تاريخي',
+                religious: 'ديني',
+                philosophical: 'فلسفي',
+                scientific: 'علمي',
+                social: 'اجتماعي',
+                economic: 'اقتصادي',
+                art: 'فني',
+                biography: 'سيرة ذاتية',
+                visions: 'رؤيات',
+                stories: 'قصص',
+                other: 'أخرى'
+            };
+            
+            container.innerHTML = booksToShow.map(book => `
+                <div class="book-card">
+                    <div class="book-header">
+                        <div>
+                            <h3 class="book-title">${book.title}</h3>
+                            <p class="book-author">المؤلف: ${book.author}</p>
+                        </div>
+                        <span class="book-category">${categories[book.category] || 'غير مصنف'}</span>
+                    </div>
+                    
+                    <p class="book-summary">${book.summary}</p>
+                    
+                    <div class="book-stats">
+                        <div class="stat-item">مشاهدات: ${book.views || 0}</div>
+                        <div class="stat-item">الإعجابات: ${book.likes || 0}</div>
+                        <div class="stat-item">الصفحات: ${book.pageCount}</div>
+                    </div>
+                    
+                    <div class="book-meta">
+                        <span>${book.uploadDate}</span>
+                    </div>
+                    
+                    <div class="book-actions">
+                        <a href="book-details.html?id=${book.id}" class="btn btn-primary" onclick="event.stopPropagation();">عرض</a>
+                        <a href="#" class="btn btn-secondary" onclick="event.stopPropagation(); downloadBook('${book.id}')">تحميل</a>
+                        <a href="#" class="btn btn-secondary" onclick="likeBook('${book.id}')">إعجاب</a>
+                    </div>
+                </div>
+            `).join('');
+            
+            displayPagination();
+        }
+
+        function displayPagination() {
+            const totalPages = Math.ceil(filteredBooks.length / booksPerPage);
+            const pagination = document.getElementById('pagination');
+            
+            if (totalPages <= 1) {
+                pagination.innerHTML = '';
+                return;
+            }
+            
+            let paginationHTML = '';
+            
+            // Previous button
+            if (currentPage > 1) {
+                paginationHTML += `<button class="page-btn" onclick="goToPage(${currentPage - 1})">السابق</button>`;
+            }
+            
+            // Page numbers
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === currentPage) {
+                    paginationHTML += `<button class="page-btn active">${i}</button>`;
+                } else {
+                    paginationHTML += `<button class="page-btn" onclick="goToPage(${i})">${i}</button>`;
+                }
+            }
+            
+            // Next button
+            if (currentPage < totalPages) {
+                paginationHTML += `<button class="page-btn" onclick="goToPage(${currentPage + 1})">التالي</button>`;
+            }
+            
+            pagination.innerHTML = paginationHTML;
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            displayBooks();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function searchBooks(event) {
+            event.preventDefault();
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            
+            if (searchTerm === '') {
+                filteredBooks = [...allBooks];
+            } else {
+                filteredBooks = allBooks.filter(book => 
+                    book.title.toLowerCase().includes(searchTerm) ||
+                    book.author.toLowerCase().includes(searchTerm) ||
+                    book.summary.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            currentPage = 1;
+            displayBooks();
+        }
+
+        function filterBooks() {
+            const category = document.getElementById('category-filter').value;
+            
+            if (category === '') {
+                filteredBooks = [...allBooks];
+            } else {
+                filteredBooks = allBooks.filter(book => book.category === category);
+            }
+            
+            currentPage = 1;
+            displayBooks();
+        }
+
+        function sortBooks() {
+            const sortBy = document.getElementById('sort-filter').value;
+            
+            switch(sortBy) {
+                case 'newest':
+                    filteredBooks.sort((a, b) => new Date(b.uploadDate) - new Date(a.uploadDate));
+                    break;
+                case 'oldest':
+                    filteredBooks.sort((a, b) => new Date(a.uploadDate) - new Date(b.uploadDate));
+                    break;
+                case 'title':
+                    filteredBooks.sort((a, b) => a.title.localeCompare(b.title));
+                    break;
+                case 'author':
+                    filteredBooks.sort((a, b) => a.author.localeCompare(b.author));
+                    break;
+                case 'popular':
+                    filteredBooks.sort((a, b) => (b.likes || 0) - (a.likes || 0));
+                    break;
+            }
+            
+            displayBooks();
+        }
+
+        function setView(viewType) {
+            const buttons = document.querySelectorAll('.view-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const container = document.getElementById('books-container');
+            if (viewType === 'list') {
+                container.style.gridTemplateColumns = '1fr';
+            } else {
+                container.style.gridTemplateColumns = 'repeat(auto-fill, minmax(350px, 1fr))';
+            }
+        }
+
+        function viewBook(bookId) {
+            alert('عرض تفاصيل الكتاب قيد التطوير');
+        }
+
+        function downloadBook(bookId) {
+            alert('تحميل الكتاب قيد التطوير');
+        }
+
+        function likeBook(bookId) {
+            alert('الإعجاب بالكتاب قيد التطوير');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            loadBooks();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>من نحن - لُباب الرقمي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: #0d0d0d;
+            color: #c4c4c4;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000 100%);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: rgba(20, 20, 20, 0.9);
+            border-bottom: 1px solid #333;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            color: #fff;
+            text-shadow: 2px 2px 0px #8a0303;
+            font-family: 'Courier New', Courier, monospace;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: #888;
+            text-decoration: none;
+            font-family: monospace;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .hero-section {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 60px 0;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            color: #fff;
+            margin-bottom: 20px;
+            font-family: 'Courier New', Courier, monospace;
+            text-shadow: 2px 2px 0px #8a0303;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: #888;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .mission-vision {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .mission-card, .vision-card {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #333;
+            padding: 40px;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .mission-card:hover, .vision-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 1.8rem;
+            color: #fff;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #8a0303;
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+
+        .card-content {
+            color: #bbb;
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        .values-section {
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #8a0303;
+            padding-bottom: 15px;
+            display: inline-block;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .value-card {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #333;
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .value-card:hover {
+            border-color: #8a0303;
+            transform: translateY(-3px);
+        }
+
+        .value-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .value-title {
+            font-size: 1.3rem;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .value-desc {
+            color: #bbb;
+            line-height: 1.6;
+        }
+
+        .team-section {
+            margin-bottom: 60px;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .team-member {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #333;
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .team-member:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+        }
+
+        .member-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            border: 3px solid #8a0303;
+        }
+
+        .member-name {
+            font-size: 1.4rem;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+
+        .member-role {
+            color: #8a0303;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .member-bio {
+            color: #bbb;
+            line-height: 1.6;
+        }
+
+        .stats-section {
+            background: rgba(138, 3, 3, 0.1);
+            border: 1px solid #8a0303;
+            padding: 40px;
+            border-radius: 8px;
+            margin-bottom: 60px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 20px;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            color: #8a0303;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .stat-label {
+            color: #fff;
+            font-size: 1.1rem;
+        }
+
+        .contact-section {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #333;
+            padding: 40px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .contact-title {
+            font-size: 1.8rem;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        .contact-info {
+            color: #bbb;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .contact-link {
+            color: #8a0303;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .contact-link:hover {
+            text-decoration: underline;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .back-link a {
+            color: #8a0303;
+            text-decoration: none;
+            font-family: monospace;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+        }
+
+        .back-link a:hover {
+            color: #a50404;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 10px;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .mission-vision {
+                grid-template-columns: 1fr;
+            }
+
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">لُباب الرقمي</a>
+            <nav class="nav-links">
+                <a href="index.html" class="nav-link">الرئيسية</a>
+                <a href="about.html" class="nav-link">من نحن</a>
+                <a href="privacy.html" class="nav-link">سياسة الخصوصية</a>
+                <a href="terms.html" class="nav-link">الشروط والأحكام</a>
+                <a href="contact.html" class="nav-link">اتصل بنا</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="hero-section">
+            <h1 class="hero-title">من نحن</h1>
+            <p class="hero-subtitle">
+                منصة لُباب الرقمي هي مشروع ثقافي رائد يهدف إلى نشر المعرفة وتسهيل الوصول إلى المحتوى الفكري والأدبي العربي الرقمي
+            </p>
+        </div>
+
+        <div class="mission-vision">
+            <div class="mission-card">
+                <div class="card-icon">🎯</div>
+                <h2 class="card-title">رسالتنا</h2>
+                <p class="card-content">
+                    تمكين المجتمع العربي من الوصول السهل والآمن إلى المحتوى الثقافي والمعرفي الرقمي، ودعم المؤلفين والباحثين في نشر أعمالهم والوصول إلى جمهور أوسع
+                </p>
+            </div>
+            
+            <div class="vision-card">
+                <div class="card-icon">🔮</div>
+                <h2 class="card-title">رؤيتنا</h2>
+                <p class="card-content">
+                    أن نكون المنصة الرائدة في العالم العربي للمحتوى الرقمي الثقافي، وجسراً يربط بين المبدعين والقراء في عالم المعرفة الرقمية
+                </p>
+            </div>
+        </div>
+
+        <div class="values-section">
+            <h2 class="section-title">قيمنا</h2>
+            <div class="values-grid">
+                <div class="value-card">
+                    <div class="value-icon">📚</div>
+                    <h3 class="value-title">المعرفة</h3>
+                    <p class="value-desc">نؤمن بأهمية نشر العلم والمعرفة كحق أساسي لكل فرد في المجتمع</p>
+                </div>
+                
+                <div class="value-card">
+                    <div class="value-icon">🤝</div>
+                    <h3 class="value-title">الشراكة</h3>
+                    <p class="value-desc">نعمل معاً مع المؤلفين والقراء والمؤسسات لتحقيق أهدافنا المشتركة</p>
+                </div>
+                
+                <div class="value-card">
+                    <div class="value-icon">🔒</div>
+                    <h3 class="value-title">الأمان</h3>
+                    <p class="value-desc">نضمن حماية المحتوى وخصوصية المستخدمين بأعلى المعايير</p>
+                </div>
+                
+                <div class="value-card">
+                    <div class="value-icon">🌟</div>
+                    <h3 class="value-title">الجودة</h3>
+                    <p class="value-desc">نلتزم بتقديم محتوى عالي الجودة ومراجعة دقيقة لكل المواد</p>
+                </div>
+                
+                <div class="value-card">
+                    <div class="value-icon">💡</div>
+                    <h3 class="value-title">الابتكار</h3>
+                    <p class="value-desc">نسعى دائماً لتطوير حلول مبتكرة لتحسين تجربة المستخدم</p>
+                </div>
+                
+                <div class="value-card">
+                    <div class="value-icon">🌍</div>
+                    <h3 class="value-title">الانفتاح</h3>
+                    <p class="value-desc">نرحب بالتنوع الثقافي وندعم الحوار البناء بين الأفكار المختلفة</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="team-section">
+            <h2 class="section-title">فريق العمل</h2>
+            <div class="team-grid">
+                <div class="team-member">
+                    <img src="https://ui-avatars.com/api/?name=أحمد+محمد&background=8a0303&color=fff&size=120" alt="أحمد محمد" class="member-avatar">
+                    <h3 class="member-name">أحمد محمد</h3>
+                    <p class="member-role">المؤسس والرئيس التنفيذي</p>
+                    <p class="member-bio">
+                        خبير في تطوير المنصات الرقمية ومتخصص في تحويل المحتوى التقليدي إلى صيغ رقمية حديثة
+                    </p>
+                </div>
+                
+                <div class="team-member">
+                    <img src="https://ui-avatars.com/api/?name=سارة+عبدالله&background=8a0303&color=fff&size=120" alt="سارة عبدالله" class="member-avatar">
+                    <h3 class="member-name">سارة عبدالله</h3>
+                    <p class="member-role">مديرة المحتوى</p>
+                    <p class="member-bio">
+                        كاتبة ومحررة لديها خبرة تزيد عن 10 سنوات في مجال النشر الثقافي والأدبي
+                    </p>
+                </div>
+                
+                <div class="team-member">
+                    <img src="https://ui-avatars.com/api/?name=خالد+السعيد&background=8a0303&color=fff&size=120" alt="خالد السعيد" class="member-avatar">
+                    <h3 class="member-name">خالد السعيد</h3>
+                    <p class="member-role">مدير التقنية</p>
+                    <p class="member-bio">
+                        مطور برمجيات متخصص في بناء المنصات التعليمية والثقافية على الإنترنت
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-section">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">1000+</div>
+                    <div class="stat-label">كتاب رقمي</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">500+</div>
+                    <div class="stat-label">مؤلف مشارك</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">50K+</div>
+                    <div class="stat-label">قارئ نشط</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">15+</div>
+                    <div class="stat-label">دولة عربية</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="contact-section">
+            <h2 class="contact-title">تواصل معنا</h2>
+            <div class="contact-info">
+                <p>نحن دائماً سعداء بالتواصل معك والاستماع إلى أفكارك واقتراحاتك</p>
+                <p>البريد الإلكتروني: <a href="mailto:info@lubab.ai" class="contact-link">info@lubab.ai</a></p>
+                <p>هاتف: <a href="tel:+966500000000" class="contact-link">+966 500 000 000</a></p>
+                <p>العنوان: الرياض، المملكة العربية السعودية</p>
+            </div>
+        </div>
+
+        <div class="back-link">
+            <a href="index.html">← العودة للصفحة الرئيسية</a>
+        </div>
+    </div>
+
+    <script>
+        // Counter animation for stats
+        function animateCounter(element, target) {
+            let current = 0;
+            const increment = target / 100;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                element.textContent = Math.floor(current) + '+';
+            }, 20);
+        }
+
+        // Intersection Observer for animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Animate stats
+                        if (entry.target.classList.contains('stats-section')) {
+                            const statNumbers = entry.target.querySelectorAll('.stat-number');
+                            statNumbers.forEach(stat => {
+                                const text = stat.textContent;
+                                const number = parseInt(text.replace(/\D/g, ''));
+                                animateCounter(stat, number);
+                            });
+                            observer.unobserve(entry.target);
+                        }
+
+                        // Fade in animations
+                        entry.target.style.opacity = '0';
+                        entry.target.style.transform = 'translateY(30px)';
+                        entry.target.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                        
+                        setTimeout(() => {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        }, 200);
+                        
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all sections
+            const sections = document.querySelectorAll('.mission-card, .vision-card, .value-card, .team-member, .stats-section');
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
+</body>
+</html>
