@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لُباب الرقمي - المنصة الرئيسية</title>
+    <meta name="description" content="منصة لُباب الرقمية للكتب والمحتوى الثقافي">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: #0d0d0d;
+            color: #c4c4c4;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000 100%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 40px 0;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            color: #fff;
+            text-shadow: 2px 2px 0px #8a0303, -1px -1px 5px #000;
+            font-family: 'Courier New', Courier, monospace;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #888;
+            font-size: 1.2rem;
+            font-family: monospace;
+        }
+
+        .main-content {
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        .cta-section {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #333;
+            padding: 40px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+        }
+
+        .cta-section h2 {
+            color: #fff;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            margin: 10px;
+            background: #8a0303;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            border: 1px solid #8a0303;
+        }
+
+        .btn:hover {
+            background: #a50404;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(138, 3, 3, 0.3);
+        }
+
+        .btn-secondary {
+            background: #111;
+            border-color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #222;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .feature-card {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #333;
+            padding: 30px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+        }
+
+        .feature-card h3 {
+            color: #fff;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .feature-card p {
+            color: #bbb;
+            line-height: 1.6;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 40px 0;
+            border-top: 1px solid #333;
+            margin-top: 50px;
+        }
+
+        .footer p {
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>لُباب الرقمي</h1>
+            <p>منصة الكتب والمحتوى الثقافي الرقمي</p>
+        </div>
+
+        <div class="main-content">
+            <div class="cta-section">
+                <h2>مرحباً بك في منصة لُباب الرقمي</h2>
+                <p style="color: #888; margin-bottom: 30px; font-size: 1.1rem;">
+                    منصة متخصصة في نشر وتبادل الكتب والمحتوى الثقافي الرقمي
+                </p>
+                
+                <div style="margin-bottom: 30px;">
+                    <a href="admin-panel.html" class="btn">لوحة التحكم</a>
+                    <a href="#" class="btn btn-secondary" onclick="showComingSoon()">تصفح الكتب</a>
+                </div>
+            </div>
+
+            <div class="features">
+                <div class="feature-card">
+                    <h3>📚 مكتبة شاملة</h3>
+                    <p>وصول إلى مجموعة واسعة من الكتب في مختلف المجالات الثقافية والعلمية</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>📤 رفع سهل</h3>
+                    <p>منصة سهلة لرفع ومشاركة الكتب والمحتوى الثقافي مع المجتمع</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>🔍 بحث متقدم</h3>
+                    <p>نظام بحث متقدم للعثور على الكتب والمحتوى الذي تبحث عنه بسهولة</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>👥 مجتمع نشط</h3>
+                    <p>انضم إلى مجتمع من القراء والكتاب والمثقفين لتبادل الأفكار والمعرفة</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2024 لُباب الرقمي - جميع الحقوق محفوظة</p>
+        </div>
+    </div>
+
+    <script>
+        function showComingSoon() {
+            alert('قسم تصفح الكتب قيد التطوير. سيكون متاحاً قريباً!');
+        }
+    </script>
+</body>
+</html>
