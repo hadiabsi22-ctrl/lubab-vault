@@ -242,9 +242,15 @@
             background: #222;
         }
 
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+
         .btn-danger {
             background: #f44336;
             border-color: #f44336;
+            color: #fff;
         }
 
         .btn-danger:hover {
@@ -500,13 +506,13 @@
                         <h4 style="color: #fff; margin-bottom: 15px;">الإشعارات</h4>
                         <div class="form-group">
                             <label style="display: flex; align-items: center; cursor: pointer;">
-                                <input type="checkbox" id="email-notifications" checked>
+                                <input type="checkbox" id="email-notifications" checked onchange="saveNotificationSettings()">
                                 <span style="margin-right: 10px;">استلام إشعارات عبر البريد الإلكتروني</span>
                             </label>
                         </div>
                         <div class="form-group">
                             <label style="display: flex; align-items: center; cursor: pointer;">
-                                <input type="checkbox" id="book-notifications" checked>
+                                <input type="checkbox" id="book-notifications" checked onchange="saveNotificationSettings()">
                                 <span style="margin-right: 10px;">إشعارات عند نشر كتاب جديد</span>
                             </label>
                         </div>
@@ -521,9 +527,9 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         // Initialize Supabase
-        const { createClient } = supabase;
         const supabase = createClient(
             'https://fyydjnzmpjwtedrzbzck.supabase.co',
             'sb_publishable_YBDpVlQXcEazTGb-_Aj1Uw_ZIC0YYfO'
@@ -568,6 +574,26 @@
             
             // Load activity
             loadUserActivity();
+            
+            // Load notification settings
+            loadNotificationSettings();
+        }
+
+        // Load notification settings
+        function loadNotificationSettings() {
+            const settings = JSON.parse(localStorage.getItem('lubab_notification_settings') || '{}');
+            document.getElementById('email-notifications').checked = settings.emailNotifications !== false;
+            document.getElementById('book-notifications').checked = settings.bookNotifications !== false;
+        }
+
+        // Save notification settings
+        function saveNotificationSettings() {
+            const settings = {
+                emailNotifications: document.getElementById('email-notifications').checked,
+                bookNotifications: document.getElementById('book-notifications').checked
+            };
+            localStorage.setItem('lubab_notification_settings', JSON.stringify(settings));
+            showSuccess('تم حفظ إعدادات الإشعارات!');
         }
 
         // Load user statistics
@@ -598,13 +624,50 @@
         }
 
         // Load user books
-        function loadUserBooks() {
+        async function loadUserBooks() {
+            try {
+                const { data: books, error } = await supabase
+                    .from('books')
+                    .select('*')
+                    .eq('user_email', currentUser.email)
+                    .order('uploadDate', { ascending: false });
+
+                if (error) throw error;
+
+                userBooks = books || [];
+                displayUserBooks();
+
+            } catch (error) {
+                console.error('Error loading user books:', error);
+                const booksGrid = document.getElementById('my-books');
+                booksGrid.innerHTML = '<div class="empty-state">حدث خطأ أثناء تحميل الكتب</div>';
+            }
+        }
+
+        // Display user books
+        function displayUserBooks() {
             const booksGrid = document.getElementById('my-books');
             
             if (userBooks.length === 0) {
                 booksGrid.innerHTML = '<div class="empty-state">لم تقم برفع أي كتب بعد</div>';
                 return;
             }
+
+            const categories = {
+                literature: 'أدبي',
+                political: 'سياسي',
+                historical: 'تاريخي',
+                religious: 'ديني',
+                philosophical: 'فلسفي',
+                scientific: 'علمي',
+                social: 'اجتماعي',
+                economic: 'اقتصادي',
+                art: 'فني',
+                biography: 'سيرة ذاتية',
+                visions: 'رؤيات',
+                stories: 'قصص',
+                other: 'أخرى'
+            };
 
             booksGrid.innerHTML = userBooks.map(book => `
                 <div class="book-card" onclick="viewBook('${book.id}')">
@@ -617,8 +680,44 @@
                     <div style="font-size: 0.8rem; color: #666; margin-top: 10px;">
                         المشاهدات: ${book.views || 0} | الإعجابات: ${book.likes || 0}
                     </div>
+                    <div class="book-actions">
+                        <button class="btn btn-small btn-primary" onclick="event.stopPropagation(); viewBook('${book.id}')">عرض</button>
+                        <button class="btn btn-small btn-secondary" onclick="event.stopPropagation(); editBook('${book.id}')">تعديل</button>
+                        <button class="btn btn-small btn-danger" onclick="event.stopPropagation(); deleteBook('${book.id}')">حذف</button>
+                    </div>
                 </div>
             `).join('');
+        }
+
+        // Edit book function
+        function editBook(bookId) {
+            window.location.href = `upload.html?edit=${bookId}`;
+        }
+
+        // Delete book function
+        async function deleteBook(bookId) {
+            if (!confirm('هل أنت متأكد من حذف هذا الكتاب؟')) {
+                return;
+            }
+
+            try {
+                const { error } = await supabase
+                    .from('books')
+                    .delete()
+                    .eq('id', bookId);
+
+                if (error) throw error;
+
+                // Remove from local array
+                userBooks = userBooks.filter(book => book.id !== bookId);
+                displayUserBooks();
+                loadUserStats();
+                showSuccess('تم حذف الكتاب بنجاح!');
+
+            } catch (error) {
+                console.error('Error deleting book:', error);
+                showError('حدث خطأ أثناء حذف الكتاب');
+            }
         }
 
         // Load user activity
@@ -675,6 +774,12 @@
         document.getElementById('profile-form').addEventListener('submit', async function(e) {
             e.preventDefault();
             
+            // Show loading state
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'جاري الحفظ...';
+            submitBtn.disabled = true;
+            
             try {
                 const updatedUser = {
                     ...currentUser,
@@ -682,6 +787,18 @@
                     email: document.getElementById('email-input').value,
                     bio: document.getElementById('bio-input').value
                 };
+
+                // Update in database
+                const { data, error } = await supabase
+                    .from('users')
+                    .update({
+                        name: updatedUser.name,
+                        email: updatedUser.email,
+                        bio: updatedUser.bio
+                    })
+                    .eq('id', currentUser.id);
+
+                if (error) throw error;
 
                 // Update localStorage
                 localStorage.setItem('lubab_current_user', JSON.stringify(updatedUser));
@@ -694,6 +811,10 @@
             } catch (error) {
                 console.error('Error updating profile:', error);
                 showError('حدث خطأ أثناء تحديث الملف الشخصي');
+            } finally {
+                // Reset button
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
             }
         });
 
@@ -717,12 +838,16 @@
             }
 
             try {
-                // In a real app, this would verify with the backend
-                const updatedUser = {
-                    ...currentUser,
-                    password: newPassword
-                };
+                // Update in database
+                const { data, error } = await supabase
+                    .from('users')
+                    .update({ password: newPassword })
+                    .eq('id', currentUser.id);
 
+                if (error) throw error;
+
+                // Update localStorage
+                const updatedUser = { ...currentUser, password: newPassword };
                 localStorage.setItem('lubab_current_user', JSON.stringify(updatedUser));
                 currentUser = updatedUser;
 
@@ -752,9 +877,19 @@
 
         function deleteAccount() {
             if (confirm('هل أنت متأكد من حذف حسابك؟ هذا الإجراء لا يمكن التراجع عنه.')) {
-                // In a real app, this would delete from database
-                localStorage.removeItem('lubab_current_user');
-                window.location.href = 'index.html';
+                // Delete from database
+                supabase
+                    .from('users')
+                    .delete()
+                    .eq('id', currentUser.id)
+                    .then(() => {
+                        localStorage.removeItem('lubab_current_user');
+                        window.location.href = 'index.html';
+                    })
+                    .catch(error => {
+                        console.error('Error deleting account:', error);
+                        showError('حدث خطأ أثناء حذف الحساب');
+                    });
             }
         }
 

@@ -537,19 +537,20 @@
                 </button>
                 <div class="faq-answer">
                     <p>بالتأكيد! نرحب بجميع الاقتراحات والأفكار. يمكنك التواصل معنا عبر البريد الإلكتروني أو قسم الاقتراحات في نموذج التواصل.</p>
+                    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+                    <script>
+                        // Initialize Supabase
+                        const supabase = createClient(
+                            'https://fyydjnzmpjwtedrzbzck.supabase.co',
+                            'sb_publishable_YBDpVlQXcEazTGb-_Aj1Uw_ZIC0YYfO'
+                        );
+                    </script>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Initialize Supabase
-        const { createClient } = supabase;
-        const supabase = createClient(
-            'https://fyydjnzmpjwtedrzbzck.supabase.co',
-            'sb_publishable_YBDpVlQXcEazTGb-_Aj1Uw_ZIC0YYfO'
-        );
-
         // Contact form submission
         document.getElementById('contact-form').addEventListener('submit', async function(e) {
             e.preventDefault();

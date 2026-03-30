@@ -565,24 +565,6 @@
                     <!-- Reviews will be loaded here -->
                 </div>
             </div>
-
-            <div class="related-books">
-                <h2 class="section-title">كتب ذات صلة</h2>
-                <div class="related-books-grid" id="related-books-grid">
-                    <!-- Related books will be loaded here -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Initialize Supabase
-        const { createClient } = supabase;
-        const supabase = createClient(
-            'https://fyydjnzmpjwtedrzbzck.supabase.co',
-            'sb_publishable_YBDpVlQXcEazTGb-_Aj1Uw_ZIC0YYfO'
-        );
-
         // Get book ID from URL
         const urlParams = new URLSearchParams(window.location.search);
         const bookId = urlParams.get('id');
