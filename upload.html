@@ -408,20 +408,27 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // التأكد من تحميل المكتبة أولاً لتجنب error: createClient is not defined
-if (typeof supabase === 'undefined') {
-    // استخدام var بدلاً من const لتجنب error: already been declared
-    var supabase = (typeof supabaseJs !== 'undefined') 
-        ? supabaseJs.createClient(
-            'https://fyydjnzmpjwtedrzbzck.supabase.co',
-            'sb_publishable_YBDpVlQXcEazTGb-_Aj1Uw_ZIC0YYfO'
-          )
-        : null;
+        // هذا الكود يحدد العميل (Client) سواء كان الاسم supabase أو supabaseJs
+let supabaseClient;
+
+if (typeof supabase !== 'undefined') {
+    supabaseClient = supabase;
+} else if (typeof supabaseJs !== 'undefined') {
+    supabaseClient = supabaseJs;
 }
 
-if (!supabase) {
-    console.error("خطأ: مكتبة Supabase لم يتم تحميلها بشكل صحيح. تأكد من وجود سطر الـ CDN في الأعلى.");
+// إذا لم يجد المكتبة نهائياً، نقوم بتعريفها هنا يدوياً
+if (!supabaseClient || typeof supabaseClient.createClient === 'undefined') {
+    // تأكد أنك وضعت رابط الـ CDN في أعلى ملف الـ HTML
+    console.error("المكتبة غير محملة، جاري محاولة الربط...");
 }
+
+const supabase = (supabaseClient && supabaseClient.createClient) 
+    ? supabaseClient.createClient(
+        'https://fyydjnzmpjwtedrzbzck.supabase.co',
+        'sb_publishable_YBDpVlQXcEazTGb-_Aj1Uw_ZIC0YYfO'
+      )
+    : null;
 
         // Check if user is logged in
         function checkAuth() {
@@ -504,10 +511,9 @@ if (!supabase) {
                 // 1. تأكد أولاً أن supabase موجود ومحمل
                 if (!supabase) {
                     // محاولة إعادة تعريف سريعة إذا سقط التعريف الأول
-                    var supabase = supabaseJs.createClient(
-                        'https://fyydjnzmpjwtedrzbzck.supabase.co',
-                        'sb_publishable_YBDpVlQXcEazTGb-_Aj1Uw_ZIC0YYfO'
-                    );
+                    console.error("المكتبة غير محملة، جاري محاولة الربط...");
+                    showNotification("خطأ في الاتصال بقاعدة البيانات", 'error');
+                    return;
                 }
 
                 // Upload file to Supabase Storage
