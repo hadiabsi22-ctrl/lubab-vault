@@ -501,6 +501,15 @@ if (!supabase) {
                     likes: 0
                 };
 
+                // 1. تأكد أولاً أن supabase موجود ومحمل
+                if (!supabase) {
+                    // محاولة إعادة تعريف سريعة إذا سقط التعريف الأول
+                    var supabase = supabaseJs.createClient(
+                        'https://fyydjnzmpjwtedrzbzck.supabase.co',
+                        'sb_publishable_YBDpVlQXcEazTGb-_Aj1Uw_ZIC0YYfO'
+                    );
+                }
+
                 // Upload file to Supabase Storage
                 const file = fileInput.files[0];
                 const fileName = `${Date.now()}_${file.name}`;
@@ -522,31 +531,33 @@ if (!supabase) {
                 formData.fileUrl = publicUrl;
                 formData.fileName = fileName;
 
-                // Insert book data into database
-                const { data: bookData, error: insertError } = await supabase
-                    .from('books')
-                    .insert([formData]);
-
-                if (insertError) {
-                    throw insertError;
+                // 2. الآن استخدم supabase.from بأمان
+                try {
+                    const { data: bookData, error: insertError } = await supabase
+                        .from('books') // تأكد أن اسم الجدول هنا مطابق لقاعدة بياناتك
+                        .insert([formData]);
+                    
+                    if (insertError) throw insertError;
+                    showNotification("تم الرفع بنجاح! الكتاب قيد المراجعة.", 'success');
+                    
+                    // Reset form
+                    document.getElementById('book-upload-form').reset();
+                    fileLabel.classList.remove('has-file');
+                    fileLabel.innerHTML = `
+                        <div>اضغط هنا لاختيار الملف</div>
+                        <div style="font-size: 0.9rem; color: #666; margin-top: 5px;">PDF, DOCX, EPUB (الحد الأقصى: 50MB)</div>
+                    `;
+                    fileInfo.style.display = 'none';
+                    
+                    // Redirect to dashboard after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 2000);
+                } catch (err) {
+                    console.error("Upload error:", err.message);
+                    showNotification("حدث خطأ أثناء الرفع: " + err.message, 'error');
+                    throw err;
                 }
-
-                // Success
-                showSuccess('تم رفع الكتاب بنجاح! سيتم مراجعته ونشره قريباً.');
-                
-                // Reset form
-                document.getElementById('book-upload-form').reset();
-                fileLabel.classList.remove('has-file');
-                fileLabel.innerHTML = `
-                    <div>اضغط هنا لاختيار الملف</div>
-                    <div style="font-size: 0.9rem; color: #666; margin-top: 5px;">PDF, DOCX, EPUB (الحد الأقصى: 50MB)</div>
-                `;
-                fileInfo.style.display = 'none';
-                
-                // Redirect to dashboard after 2 seconds
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 2000);
 
             } catch (error) {
                 console.error('Upload error:', error);
