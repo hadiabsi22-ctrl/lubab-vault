@@ -407,20 +407,8 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
     <script>
-        // بدلاً من const supabase = ... استخدم هذا الكود:
-if (typeof window.supabaseClient === 'undefined') {
-    window.supabaseClient = (typeof supabaseJs !== 'undefined') ? supabaseJs : (typeof supabase !== 'undefined' ? supabase : null);
-}
-
-// الآن نقوم بالتعريف مرة واحدة فقط وبدون استخدام const لتجنب الخطأ
-var supabase = (window.supabaseClient && window.supabaseClient.createClient) 
-    ? window.supabaseClient.createClient(
-        'https://fyydjnzmpjwtedrzbzck.supabase.co',
-        'sb_publishable_YBDpVlQXcEazTGb-_Aj1Uw_ZIC0YYfO'
-      ) 
-    : supabase; // إذا كان معرفاً مسبقاً سيبقى كما هو
-
         // Check if user is logged in
         function checkAuth() {
             const currentUser = localStorage.getItem('lubab_current_user');
@@ -430,8 +418,8 @@ var supabase = (window.supabaseClient && window.supabaseClient.createClient)
             }
             
             const user = JSON.parse(currentUser);
-            document.getElementById('user-avatar').src = user.avatar;
             document.getElementById('user-name').textContent = user.name;
+            document.getElementById('user-email').textContent = user.email;
             document.getElementById('email').value = user.email;
         }
 
