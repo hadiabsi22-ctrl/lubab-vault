@@ -869,8 +869,47 @@
 
         // Download book
         function downloadBook(bookId) {
-            // In a real app, this would download the book
-            alert('جاري تحميل الكتاب...');
+            // Find the book in search results
+            const book = searchResults.find(b => b.id === bookId);
+            if (book && book.fileUrl) {
+                // Create download link
+                const link = document.createElement('a');
+                link.href = book.fileUrl;
+                link.download = `${book.title}.pdf`;
+                link.style.display = 'none';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                showNotification('جاري تحميل الكتاب...', 'success');
+            } else {
+                showNotification('الملف غير متاح للتحميل حالياً', 'error');
+            }
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                background: ${type === 'success' ? '#4caf50' : type === 'error' ? '#f44336' : '#2196f3'};
+                color: white;
+                border-radius: 4px;
+                z-index: 10000;
+                font-family: monospace;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                transition: all 0.3s ease;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
         }
 
         // Initialize

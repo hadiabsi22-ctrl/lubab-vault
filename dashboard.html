@@ -438,7 +438,7 @@
                         <span>${book.uploadDate}</span>
                     </div>
                     <div class="book-actions">
-                        <a href="#" class="btn btn-primary" onclick="viewBook('${book.id}')">عرض</a>
+                        <a href="book-details.html?id=${book.id}" class="btn btn-primary">عرض</a>
                         <a href="#" class="btn btn-secondary" onclick="downloadBook('${book.id}')">تحميل</a>
                     </div>
                 </div>
@@ -447,11 +447,50 @@
 
         // Book action functions
         function viewBook(bookId) {
-            alert('عرض الكتاب قيد التطوير');
+            window.location.href = `book-details.html?id=${bookId}`;
         }
 
         function downloadBook(bookId) {
-            alert('تحميل الكتاب قيد التطوير');
+            // Find the book in recent books
+            const book = allBooks.find(b => b.id === bookId);
+            if (book && book.fileUrl) {
+                // Create download link
+                const link = document.createElement('a');
+                link.href = book.fileUrl;
+                link.download = `${book.title}.pdf`;
+                link.style.display = 'none';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } else {
+                showNotification('الملف غير متاح للتحميل حالياً', 'error');
+            }
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                background: ${type === 'success' ? '#4caf50' : type === 'error' ? '#f44336' : '#2196f3'};
+                color: white;
+                border-radius: 4px;
+                z-index: 10000;
+                font-family: monospace;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                transition: all 0.3s ease;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
         }
 
         // Initialize

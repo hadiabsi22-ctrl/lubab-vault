@@ -859,24 +859,72 @@
         }
 
         // Action functions
-        function downloadBook() {
+        function downloadBook(bookId) {
             if (currentBook && currentBook.fileUrl) {
-                window.open(currentBook.fileUrl, '_blank');
+                // Create download link
+                const link = document.createElement('a');
+                link.href = currentBook.fileUrl;
+                link.download = `${currentBook.title}.pdf`;
+                link.style.display = 'none';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                showNotification('جاري تحميل الكتاب...', 'success');
             } else {
-                alert('الملف غير متاح للتحميل حالياً');
+                showNotification('الملف غير متاح للتحميل حالياً', 'error');
             }
         }
 
         function readOnline() {
-            alert('القراءة أونلاين ستكون متاحة قريباً');
+            if (currentBook && currentBook.fileUrl) {
+                // Open book in new tab for reading
+                window.open(currentBook.fileUrl, '_blank');
+            } else {
+                showNotification('الملف غير متاح للقراءة حالياً', 'error');
+            }
         }
 
         function addToFavorites() {
             if (!currentUser) {
-                alert('يجب تسجيل الدخول لإضافة الكتاب للمفضلة');
+                showNotification('يجب تسجيل الدخول لإضافة الكتاب للمفضلة', 'error');
                 return;
             }
-            alert('تمت إضافة الكتاب للمفضلة');
+            
+            // Save to favorites in localStorage
+            let favorites = JSON.parse(localStorage.getItem('lubab_favorites') || '[]');
+            if (!favorites.includes(bookId)) {
+                favorites.push(bookId);
+                localStorage.setItem('lubab_favorites', JSON.stringify(favorites));
+                showNotification('تمت إضافة الكتاب للمفضلة', 'success');
+            } else {
+                showNotification('الكتاب موجود بالفعل في المفضلة', 'info');
+            }
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                background: ${type === 'success' ? '#4caf50' : type === 'error' ? '#f44336' : '#2196f3'};
+                color: white;
+                border-radius: 4px;
+                z-index: 10000;
+                font-family: monospace;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                transition: all 0.3s ease;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
         }
 
         function goToBook(bookId) {
