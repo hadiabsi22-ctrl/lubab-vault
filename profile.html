@@ -761,9 +761,12 @@
 
         // Tab switching
         function switchTab(tabName) {
+            // Get the clicked button
+            const clickedButton = event.target;
+            
             // Update tab buttons
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            event.target.classList.add('active');
+            clickedButton.classList.add('active');
 
             // Update tab content
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
