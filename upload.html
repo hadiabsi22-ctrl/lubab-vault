@@ -511,11 +511,16 @@ var supabase = (window.supabaseClient && window.supabaseClient.createClient)
                 const file = fileInput.files[0];
                 const fileName = `${Date.now()}_${file.name}`;
                 
+                // كود الرفع الخاص بك يجب أن يشير إلى الباكت 'books'
                 const { data: uploadData, error: uploadError } = await supabase.storage
-                    .from('books')
+                    .from('books') // تأكد أن هذا الاسم مطابق للذي أنشأته في لوحة التحكم
                     .upload(fileName, file);
 
                 if (uploadError) {
+                    if (uploadError.message.includes('Bucket not found')) {
+                        showNotification("خطأ: يجب عليك إنشاء Bucket باسم books في لوحة تحكم Supabase أولاً.", 'error');
+                        return;
+                    }
                     throw uploadError;
                 }
 
