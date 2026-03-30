@@ -10,14 +10,6 @@
     {
       "src": "/",
       "dest": "/index.html"
-    },
-    {
-      "src": "/admin",
-      "dest": "/admin-panel.html"
-    },
-    {
-      "src": "/admin-panel",
-      "dest": "/admin-panel.html"
     }
   ],
   "headers": [
