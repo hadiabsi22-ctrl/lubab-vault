@@ -721,19 +721,22 @@
         }
 
         function likeBook(bookId) {
-            if (!currentUser) {
-                showNotification('يجب تسجيل الدخول لإضافة إعجاب', 'error');
-                return;
-            }
+    // أضف هذا السطر لتعريف المستخدم إذا لم يكن موجوداً
+    let currentUser = JSON.parse(localStorage.getItem('lubab_current_user'));
+
+    if (!currentUser) {
+        showNotification("يرجى تسجيل الدخول أولاً للإعجاب بالكتاب", 'error');
+        return;
+    }
             
-            // Update likes count
-            const bookIndex = filteredBooks.findIndex(b => b.id === bookId);
-            if (bookIndex !== -1) {
-                filteredBooks[bookIndex].likes = (filteredBooks[bookIndex].likes || 0) + 1;
-                displayBooks();
-                showNotification('تمت إضافة إعجاب!', 'success');
-            }
-        }
+    // Update likes count
+    const bookIndex = filteredBooks.findIndex(b => b.id === bookId);
+    if (bookIndex !== -1) {
+        filteredBooks[bookIndex].likes = (filteredBooks[bookIndex].likes || 0) + 1;
+        displayBooks();
+        showNotification('تمت إضافة إعجاب!', 'success');
+    }
+}
 
         function showNotification(message, type = 'info') {
             const notification = document.createElement('div');
