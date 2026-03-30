@@ -408,27 +408,18 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // هذا الكود يحدد العميل (Client) سواء كان الاسم supabase أو supabaseJs
-let supabaseClient;
-
-if (typeof supabase !== 'undefined') {
-    supabaseClient = supabase;
-} else if (typeof supabaseJs !== 'undefined') {
-    supabaseClient = supabaseJs;
+        // بدلاً من const supabase = ... استخدم هذا الكود:
+if (typeof window.supabaseClient === 'undefined') {
+    window.supabaseClient = (typeof supabaseJs !== 'undefined') ? supabaseJs : (typeof supabase !== 'undefined' ? supabase : null);
 }
 
-// إذا لم يجد المكتبة نهائياً، نقوم بتعريفها هنا يدوياً
-if (!supabaseClient || typeof supabaseClient.createClient === 'undefined') {
-    // تأكد أنك وضعت رابط الـ CDN في أعلى ملف الـ HTML
-    console.error("المكتبة غير محملة، جاري محاولة الربط...");
-}
-
-const supabase = (supabaseClient && supabaseClient.createClient) 
-    ? supabaseClient.createClient(
+// الآن نقوم بالتعريف مرة واحدة فقط وبدون استخدام const لتجنب الخطأ
+var supabase = (window.supabaseClient && window.supabaseClient.createClient) 
+    ? window.supabaseClient.createClient(
         'https://fyydjnzmpjwtedrzbzck.supabase.co',
         'sb_publishable_YBDpVlQXcEazTGb-_Aj1Uw_ZIC0YYfO'
-      )
-    : null;
+      ) 
+    : supabase; // إذا كان معرفاً مسبقاً سيبقى كما هو
 
         // Check if user is logged in
         function checkAuth() {
