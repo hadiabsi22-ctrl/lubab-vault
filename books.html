@@ -485,16 +485,25 @@
         const booksPerPage = 12;
 
         function loadBooks() {
+            console.log('Loading books...'); // Debug
+            
             // Get books from admin panel storage
             const adminBooks = JSON.parse(localStorage.getItem('lubab_admin_books') || '[]');
             allBooks = adminBooks.filter(book => book.status === 'approved');
             
-            // Add some mock data if no books exist
+            console.log('Found books:', allBooks.length); // Debug
+            
+            // Add some demo books if no books exist
             if (allBooks.length === 0) {
                 allBooks = [
                     {
                         id: '1',
-                        title: 'فلسفة العبث',
+                        title: 'كتاب البرمجة للمبتدئين',
+                        author: 'أحمد محمد',
+                        category: 'تقنية',
+                        description: 'كتاب شامل لتعلم البرمجة من الصفر',
+                        coverUrl: 'https://via.placeholder.com/200x300/8a0303/fff?text=برمجة',
+                        fileUrl: '#',
                         author: 'أحمد عبدالله',
                         summary: 'يناقش هذا الكتاب العبثية في الحياة اليومية، وكيف يمكن للإنسان إيجاد المعنى في عالم يبدو بلا هدف.',
                         pageCount: 245,
@@ -766,7 +775,7 @@
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            checkAuth();
+            console.log('Books page loaded!'); // Debug
             loadBooks();
             checkAuthStatus(); // Check if user is logged in for UI updates
         });

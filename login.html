@@ -234,8 +234,11 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="auth.js"></script>
+    <script src="init-data.js"></script>
     <script>
-        // Switch between tabs
         function switchTab(tab) {
             const tabs = document.querySelectorAll('.tab');
             const contents = document.querySelectorAll('.tab-content');
@@ -276,21 +279,27 @@
         function handleLogin() {
             console.log('Login button clicked!'); // Debug
             
+            // Get form values
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
             const rememberMe = document.getElementById('remember-me').checked;
             const errorDiv = document.getElementById('login-error');
             
-            console.log('Login data:', { email, rememberMe }); // Debug
+            console.log('Login attempt:', { email, password: '***', rememberMe }); // Debug
             
+            // Clear error
             errorDiv.style.display = 'none';
             
-            // Check if user exists
+            // Get users from localStorage
+            let users = JSON.parse(localStorage.getItem('lubab_users') || '[]');
+            console.log('Available users:', users); // Debug
+            
+            // Find user
             const user = users.find(u => u.email === email && u.password === password);
-            console.log('Found user:', user); // Debug
+            console.log('User found:', user ? 'YES' : 'NO'); // Debug
             
             if (user) {
-                // Store current user session with timestamp
+                // Success
                 const sessionData = {
                     ...user,
                     loginTime: Date.now(),
@@ -298,19 +307,18 @@
                 };
                 localStorage.setItem('lubab_current_user', JSON.stringify(sessionData));
                 
-                // Store remember me preference
                 if (rememberMe) {
                     localStorage.setItem('lubab_remember_me', 'true');
                 } else {
                     localStorage.removeItem('lubab_remember_me');
                 }
                 
-                console.log('Login successful, redirecting...'); // Debug
+                console.log('Login SUCCESS! Redirecting...'); // Debug
                 alert('تم تسجيل الدخول بنجاح!');
                 window.location.href = 'dashboard.html';
             } else {
-                // Show error
-                console.log('Login failed'); // Debug
+                // Failed
+                console.log('Login FAILED!'); // Debug
                 errorDiv.textContent = 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
                 errorDiv.style.display = 'block';
             }
