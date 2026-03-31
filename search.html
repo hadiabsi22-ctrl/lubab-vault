@@ -908,7 +908,32 @@
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             checkAuth();
+            loadCategories();
+            checkAuthStatus(); // Check if user is logged in for UI updates
         });
+    </script>
+    <script>
+        // Check if user is logged in
+        function checkAuthStatus() {
+            const currentUser = localStorage.getItem('lubab_current_user');
+            if (currentUser) {
+                // User is logged in, show user info
+                const user = JSON.parse(currentUser);
+                // Update UI for logged in user
+                updateUIForLoggedInUser(user);
+            }
+            // If not logged in, still allow browsing
+        }
+
+        // Update UI for logged in user
+        function updateUIForLoggedInUser(user) {
+            // Update login button to show user info
+            const loginBtn = document.querySelector('a[href="login.html"]');
+            if (loginBtn) {
+                loginBtn.textContent = user.name;
+                loginBtn.href = 'dashboard.html';
+            }
+        }
     </script>
 </body>
 </html>

@@ -195,6 +195,10 @@
                         <label>كلمة المرور:</label>
                         <input type="password" id="login-password" class="form-control" required placeholder="أدخل كلمة المرور">
                     </div>
+                    <div class="form-group" style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                        <input type="checkbox" id="remember-me" style="width: auto; margin: 0;">
+                        <label for="remember-me" style="margin: 0; color: #888; font-size: 0.9rem;">تذكرني لمدة 30 يوم</label>
+                    </div>
                     <button type="submit" class="btn">تسجيل الدخول</button>
                 </form>
             </div>
@@ -254,22 +258,42 @@
         // Login form handler
         document.getElementById('login-form').addEventListener('submit', function(e) {
             e.preventDefault();
+            console.log('Login form submitted'); // Debug
             
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
+            const rememberMe = document.getElementById('remember-me').checked;
             const errorDiv = document.getElementById('login-error');
+            
+            console.log('Login data:', { email, rememberMe }); // Debug
             
             errorDiv.style.display = 'none';
             
             // Check if user exists
             const user = users.find(u => u.email === email && u.password === password);
+            console.log('Found user:', user); // Debug
             
             if (user) {
-                // Store current user session
-                localStorage.setItem('lubab_current_user', JSON.stringify(user));
+                // Store current user session with timestamp
+                const sessionData = {
+                    ...user,
+                    loginTime: Date.now(),
+                    rememberMe: rememberMe
+                };
+                localStorage.setItem('lubab_current_user', JSON.stringify(sessionData));
+                
+                // Store remember me preference
+                if (rememberMe) {
+                    localStorage.setItem('lubab_remember_me', 'true');
+                } else {
+                    localStorage.removeItem('lubab_remember_me');
+                }
+                
+                console.log('Login successful, redirecting...'); // Debug
                 window.location.href = 'dashboard.html';
             } else {
                 // Show error
+                console.log('Login failed'); // Debug
                 errorDiv.textContent = 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
                 errorDiv.style.display = 'block';
             }
@@ -347,7 +371,13 @@
             };
             users.push(demoUser);
             localStorage.setItem('lubab_users', JSON.stringify(users));
+            console.log('Demo user created:', demoUser); // Debug
         }
+        
+        // Initialize form listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Login page loaded, users:', users); // Debug
+        });
     </script>
 </body>
 </html>

@@ -319,12 +319,125 @@
                 <img id="user-avatar" src="" alt="User Avatar" class="user-avatar">
                 <div class="user-details">
                     <div id="user-name" class="user-name"></div>
-                    <div id="user-email" class="user-email"></div>
+                    <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
                 </div>
-                <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
             </div>
         </div>
     </header>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        // Check if user is logged in
+        function checkAuth() {
+            const user = authManager.getCurrentUser();
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Update UI
+            document.getElementById('user-name').textContent = user.name;
+            if (user.avatar) {
+                document.getElementById('user-avatar').src = user.avatar;
+            }
+            
+            loadDashboard();
+        }
+
+        // Logout function
+        function logout() {
+            authManager.logout();
+        }
+
+        // Load dashboard data
+        async function loadDashboard() {
+            try {
+                // Load statistics
+                const { data: books, error } = await supabase
+                    .from('books')
+                    .select('*');
+                
+                if (!error && books) {
+                    const totalBooks = books.length;
+                    const approvedBooks = books.filter(b => b.status === 'approved').length;
+                    const pendingBooks = books.filter(b => b.status === 'pending').length;
+                    
+                    document.getElementById('total-books').textContent = totalBooks;
+                    document.getElementById('approved-books').textContent = approvedBooks;
+                    document.getElementById('pending-books').textContent = pendingBooks;
+                }
+                
+                // Load recent books
+                loadRecentBooks();
+                
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+            }
+        }
+
+        // Load recent books
+        async function loadRecentBooks() {
+            try {
+                const { data: books, error } = await supabase
+                    .from('books')
+                    .select('*')
+                    .order('uploadDate', { ascending: false })
+                    .limit(6);
+                
+                if (!error && books) {
+                    displayRecentBooks(books);
+                }
+            } catch (error) {
+                console.error('Error loading recent books:', error);
+            }
+        }
+
+        // Display recent books
+        function displayRecentBooks(books) {
+            const container = document.getElementById('recent-books');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            books.forEach(book => {
+                const bookCard = document.createElement('div');
+                bookCard.className = 'book-card';
+                bookCard.innerHTML = `
+                    <div class="book-cover">
+                        <img src="${book.fileUrl || 'https://via.placeholder.com/150x200/8a0303/fff?text=No+Cover'}" alt="${book.title}">
+                    </div>
+                    <div class="book-info">
+                        <h4>${book.title}</h4>
+                        <p>${book.author}</p>
+                        <div class="book-actions">
+                            <button class="btn btn-sm" onclick="viewBook('${book.id}')">عرض</button>
+                            <button class="btn btn-sm btn-secondary" onclick="downloadBook('${book.fileUrl}')">تحميل</button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(bookCard);
+            });
+        }
+
+        // View book
+        function viewBook(bookId) {
+            window.location.href = `book-details.html?id=${bookId}`;
+        }
+
+        // Download book
+        function downloadBook(fileUrl) {
+            if (fileUrl) {
+                window.open(fileUrl, '_blank');
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+        });
+    </script>
 
     <div class="container">
         <div class="welcome-section">
