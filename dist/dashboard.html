@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - لُباب الرقمي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: #0d0d0d;
+            color: #c4c4c4;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000 100%);
+        }
+
+        .header {
+            background: rgba(20, 20, 20, 0.9);
+            border-bottom: 1px solid #333;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            color: #fff;
+            text-shadow: 2px 2px 0px #8a0303;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #8a0303;
+        }
+
+        .user-details {
+            text-align: left;
+        }
+
+        .user-name {
+            color: #fff;
+            font-weight: bold;
+            font-family: monospace;
+        }
+
+        .user-email {
+            color: #888;
+            font-size: 0.8rem;
+            font-family: monospace;
+        }
+
+        .logout-btn {
+            background: #8a0303;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: monospace;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #a50404;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+
+        .welcome-section h1 {
+            font-size: 2.5rem;
+            color: #fff;
+            margin-bottom: 15px;
+        }
+
+        .welcome-section p {
+            color: #888;
+            font-size: 1.1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #333;
+            padding: 25px;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            color: #8a0303;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .stat-label {
+            color: #888;
+            font-size: 1rem;
+        }
+
+        .books-section {
+            margin-bottom: 40px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: #fff;
+            border-bottom: 2px solid #8a0303;
+            padding-bottom: 10px;
+        }
+
+        .view-all-btn {
+            background: #111;
+            color: #fff;
+            border: 1px solid #333;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-family: monospace;
+        }
+
+        .view-all-btn:hover {
+            background: #222;
+            border-color: #8a0303;
+        }
+
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .book-card {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #333;
+            padding: 20px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .book-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+        }
+
+        .book-title {
+            color: #fff;
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+        }
+
+        .book-author {
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .book-summary {
+            color: #bbb;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            margin-bottom: 15px;
+        }
+
+        .book-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .book-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            font-family: monospace;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: #8a0303;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #a50404;
+        }
+
+        .btn-secondary {
+            background: #111;
+            color: #fff;
+            border: 1px solid #333;
+        }
+
+        .btn-secondary:hover {
+            background: #222;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .action-card {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #333;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .action-card:hover {
+            transform: translateY(-3px);
+            border-color: #8a0303;
+        }
+
+        .action-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .action-title {
+            color: #fff;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .action-desc {
+            color: #888;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">لُباب الرقمي</div>
+            <div class="user-info">
+                <img id="user-avatar" src="" alt="User Avatar" class="user-avatar">
+                <div class="user-details">
+                    <div id="user-name" class="user-name"></div>
+                    <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        // Check if user is logged in
+        function checkAuth() {
+            const user = authManager.getCurrentUser();
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Update UI
+            document.getElementById('user-name').textContent = user.name;
+            if (user.avatar) {
+                document.getElementById('user-avatar').src = user.avatar;
+            }
+            
+            loadDashboard();
+        }
+
+        // Logout function
+        function logout() {
+            authManager.logout();
+        }
+
+        // Load dashboard data
+        async function loadDashboard() {
+            try {
+                // Load statistics - with fallback for no Supabase
+                let totalBooks = 0, approvedBooks = 0, pendingBooks = 0;
+                
+                try {
+                    const { data: books, error } = await supabase
+                        .from('books')
+                        .select('*');
+                    
+                    if (!error && books) {
+                        totalBooks = books.length;
+                        approvedBooks = books.filter(b => b.status === 'approved').length;
+                        pendingBooks = books.filter(b => b.status === 'pending').length;
+                    }
+                } catch (supabaseError) {
+                    console.warn('Supabase not available, using mock data');
+                    // Use mock data if Supabase is not available
+                    totalBooks = 12;
+                    approvedBooks = 8;
+                    pendingBooks = 4;
+                }
+                
+                document.getElementById('total-books').textContent = totalBooks;
+                document.getElementById('approved-books').textContent = approvedBooks;
+                document.getElementById('pending-books').textContent = pendingBooks;
+                
+                // Load recent books
+                loadRecentBooks();
+                
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                // Show default values on error
+                document.getElementById('total-books').textContent = '0';
+                document.getElementById('approved-books').textContent = '0';
+                document.getElementById('pending-books').textContent = '0';
+            }
+        }
+
+        // Load recent books
+        async function loadRecentBooks() {
+            try {
+                let books = [];
+                
+                try {
+                    const { data: booksData, error } = await supabase
+                        .from('books')
+                        .select('*')
+                        .order('uploadDate', { ascending: false })
+                        .limit(6);
+                    
+                    if (!error && booksData) {
+                        books = booksData;
+                    }
+                } catch (supabaseError) {
+                    console.warn('Supabase not available, using mock books');
+                    // Use mock books if Supabase is not available
+                    books = [
+                        {
+                            id: '1',
+                            title: 'كتاب البرمجة',
+                            author: 'مؤلف تجريبي',
+                            fileUrl: 'https://via.placeholder.com/150x200/8a0303/fff?text=Book+1'
+                        },
+                        {
+                            id: '2',
+                            title: 'كتاب التصميم',
+                            author: 'مؤلف تجريبي',
+                            fileUrl: 'https://via.placeholder.com/150x200/8a0303/fff?text=Book+2'
+                        }
+                    ];
+                }
+                
+                displayRecentBooks(books);
+            } catch (error) {
+                console.error('Error loading recent books:', error);
+            }
+        }
+
+        // Display recent books
+        function displayRecentBooks(books) {
+            const container = document.getElementById('recent-books');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            books.forEach(book => {
+                const bookCard = document.createElement('div');
+                bookCard.className = 'book-card';
+                bookCard.innerHTML = `
+                    <div class="book-cover">
+                        <img src="${book.fileUrl || 'https://via.placeholder.com/150x200/8a0303/fff?text=No+Cover'}" alt="${book.title}">
+                    </div>
+                    <div class="book-info">
+                        <h4>${book.title}</h4>
+                        <p>${book.author}</p>
+                        <div class="book-actions">
+                            <button class="btn btn-sm" onclick="viewBook('${book.id}')">عرض</button>
+                            <button class="btn btn-sm btn-secondary" onclick="downloadBook('${book.fileUrl}')">تحميل</button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(bookCard);
+            });
+        }
+
+        // View book
+        function viewBook(bookId) {
+            window.location.href = `book-details.html?id=${bookId}`;
+        }
+
+        // Download book
+        function downloadBook(fileUrl) {
+            if (fileUrl) {
+                window.open(fileUrl, '_blank');
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+        });
+    </script>
+
+    <div class="container">
+        <div class="welcome-section">
+            <h1>مرحباً بك في لوحة التحكم</h1>
+            <p>منصة الكتب والمحتوى الثقافي الرقمي</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="total-books">0</div>
+                <div class="stat-label">إجمالي الكتب</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="approved-books">0</div>
+                <div class="stat-label">الكتب المعتمدة</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="pending-books">0</div>
+                <div class="stat-label">قيد المراجعة</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="total-users">0</div>
+                <div class="stat-label">المستخدمون</div>
+            </div>
+        </div>
+
+        <div class="books-section">
+            <div class="section-header">
+                <h2 class="section-title">أحدث الكتب المعتمدة</h2>
+                <a href="books.html" class="view-all-btn">عرض جميع الكتب →</a>
+            </div>
+            <div id="recent-books" class="books-grid"></div>
+        </div>
+
+        <div class="quick-actions">
+            <a href="upload.html" class="action-card">
+                <div class="action-icon">رفع</div>
+                <div class="action-title">رفع كتاب</div>
+                <div class="action-desc">شارك كتابك مع المجتمع</div>
+            </a>
+            <a href="books.html" class="action-card">
+                <div class="action-icon">تصفح</div>
+                <div class="action-title">تصفح الكتب</div>
+                <div class="action-desc">اكتشف محتوى جديد</div>
+            </a>
+            <a href="profile.html" class="action-card">
+                <div class="action-icon">ملف</div>
+                <div class="action-title">الملف الشخصي</div>
+                <div class="action-desc">إعدادات حسابك</div>
+            </a>
+            <a href="search.html" class="action-card">
+                <div class="action-icon">بحث</div>
+                <div class="action-title">بحث متقدم</div>
+                <div class="action-desc">ابحث عن كتب محددة</div>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Check if user is logged in
+        function checkAuth() {
+            const currentUser = localStorage.getItem('lubab_current_user');
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            const user = JSON.parse(currentUser);
+            document.getElementById('user-avatar').src = user.avatar;
+            document.getElementById('user-name').textContent = user.name;
+            document.getElementById('user-email').textContent = user.email;
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('lubab_current_user');
+            window.location.href = 'login.html';
+        }
+
+        // Load books data (in real app, this would come from API)
+        function loadBooks() {
+            // Get books from admin panel or local storage
+            const adminBooks = JSON.parse(localStorage.getItem('lubab_admin_books') || '[]');
+            const approvedBooks = adminBooks.filter(book => book.status === 'approved');
+            
+            // Update stats
+            document.getElementById('total-books').textContent = adminBooks.length;
+            document.getElementById('approved-books').textContent = approvedBooks.length;
+            document.getElementById('pending-books').textContent = adminBooks.filter(b => b.status === 'pending').length;
+            
+            // Load users count
+            const users = JSON.parse(localStorage.getItem('lubab_users') || '[]');
+            document.getElementById('total-users').textContent = users.length;
+            
+            // Display recent books (latest 6)
+            const recentBooks = approvedBooks.slice(-6).reverse();
+            const booksGrid = document.getElementById('recent-books');
+            
+            if (recentBooks.length === 0) {
+                booksGrid.innerHTML = '<div class="empty-state">لا توجد كتب معتمدة حالياً</div>';
+                return;
+            }
+            
+            booksGrid.innerHTML = recentBooks.map(book => `
+                <div class="book-card">
+                    <h3 class="book-title">${book.title}</h3>
+                    <p class="book-author">المؤلف: ${book.author}</p>
+                    <p class="book-summary">${book.summary}</p>
+                    <div class="book-meta">
+                        <span>${book.pageCount} صفحة</span>
+                        <span>${book.uploadDate}</span>
+                    </div>
+                    <div class="book-actions">
+                        <a href="book-details.html?id=${book.id}" class="btn btn-primary">عرض</a>
+                        <a href="#" class="btn btn-secondary" onclick="downloadBook('${book.id}')">تحميل</a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Book action functions
+        function viewBook(bookId) {
+            window.location.href = `book-details.html?id=${bookId}`;
+        }
+
+        function downloadBook(bookId) {
+            // Find the book in recent books
+            const book = allBooks.find(b => b.id === bookId);
+            if (book && book.fileUrl) {
+                // Create download link
+                const link = document.createElement('a');
+                link.href = book.fileUrl;
+                link.download = `${book.title}.pdf`;
+                link.style.display = 'none';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } else {
+                showNotification('الملف غير متاح للتحميل حالياً', 'error');
+            }
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                background: ${type === 'success' ? '#4caf50' : type === 'error' ? '#f44336' : '#2196f3'};
+                color: white;
+                border-radius: 4px;
+                z-index: 10000;
+                font-family: monospace;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                transition: all 0.3s ease;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            loadBooks();
+        });
+    </script>
+</body>
+</html>

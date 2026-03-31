@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>رفع كتاب - لُباب الرقمي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: #0d0d0d;
+            color: #c4c4c4;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000 100%);
+        }
+
+        .header {
+            background: rgba(20, 20, 20, 0.9);
+            border-bottom: 1px solid #333;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            color: #fff;
+            text-shadow: 2px 2px 0px #8a0303;
+            font-family: 'Courier New', Courier, monospace;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #888;
+            text-decoration: none;
+            font-family: monospace;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: #fff;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            border: 2px solid #8a0303;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            color: #fff;
+            margin-bottom: 15px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .page-subtitle {
+            color: #888;
+            font-size: 1.1rem;
+        }
+
+        .upload-form {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #333;
+            padding: 40px;
+            border-radius: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #888;
+            font-family: monospace;
+            font-weight: bold;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            background: #111;
+            border: 1px solid #333;
+            color: #fff;
+            border-radius: 4px;
+            font-family: monospace;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #8a0303;
+            box-shadow: 0 0 5px rgba(138, 3, 3, 0.3);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-upload input[type="file"] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-upload-label {
+            display: block;
+            padding: 20px;
+            background: #111;
+            border: 2px dashed #333;
+            border-radius: 4px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .file-upload-label:hover {
+            border-color: #8a0303;
+            background: rgba(138, 3, 3, 0.1);
+        }
+
+        .file-upload-label.has-file {
+            border-color: #4caf50;
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .file-info {
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(76, 175, 80, 0.1);
+            border-radius: 4px;
+            color: #4caf50;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #333;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #8a0303;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 10px;
+            color: #888;
+            font-family: monospace;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            background: #8a0303;
+            color: #fff;
+            border: 1px solid #8a0303;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-family: monospace;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background: #a50404;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(138, 3, 3, 0.3);
+        }
+
+        .btn:disabled {
+            background: #333;
+            border-color: #333;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: #111;
+            border-color: #333;
+            color: #fff;
+        }
+
+        .btn-secondary:hover {
+            background: #222;
+        }
+
+        .error-message {
+            color: #ff4444;
+            background: rgba(255, 68, 68, 0.1);
+            border: 1px solid #ff4444;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-family: monospace;
+            display: none;
+        }
+
+        .success-message {
+            color: #4caf50;
+            background: rgba(76, 175, 80, 0.1);
+            border: 1px solid #4caf50;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-family: monospace;
+            display: none;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .form-actions .btn {
+            flex: 1;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 10px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="dashboard.html" class="logo">لُباب الرقمي</a>
+            <nav class="nav-links">
+                <a href="dashboard.html" class="nav-link">لوحة التحكم</a>
+                <a href="books.html" class="nav-link">المكتبة</a>
+                <a href="upload.html" class="nav-link">رفع كتاب</a>
+                <a href="search.html" class="nav-link">بحث</a>
+            </nav>
+            <div class="user-info">
+                <img id="user-avatar" src="" alt="User Avatar" class="user-avatar">
+                <span id="user-name" style="color: #fff; font-family: monospace;"></span>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">رفع كتاب جديد</h1>
+            <p class="page-subtitle">شارك كتابك مع مجتمع لُباب الرقمي</p>
+        </div>
+
+        <div class="upload-form">
+            <div id="error-message" class="error-message"></div>
+            <div id="success-message" class="success-message"></div>
+
+            <form id="book-upload-form">
+                <div class="form-group">
+                    <label>البريد الإلكتروني:</label>
+                    <input type="email" id="email" class="form-control" required placeholder="أدخل بريدك الإلكتروني">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>اسم الكتاب:</label>
+                        <input type="text" id="book-title" class="form-control" required placeholder="أدخل اسم الكتاب">
+                    </div>
+                    <div class="form-group">
+                        <label>عدد الصفحات:</label>
+                        <input type="number" id="page-count" class="form-control" required placeholder="عدد الصفحات">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>اسم المؤلف:</label>
+                    <input type="text" id="author-name" class="form-control" required placeholder="أدخل اسم المؤلف">
+                </div>
+
+                <div class="form-group">
+                    <label>تصنيف الكتاب:</label>
+                    <select id="category" class="form-control" required>
+                        <option value="">اختر التصنيف</option>
+                        <option value="literature">أدبي</option>
+                        <option value="political">سياسي</option>
+                        <option value="historical">تاريخي</option>
+                        <option value="religious">ديني</option>
+                        <option value="philosophical">فلسفي</option>
+                        <option value="scientific">علمي</option>
+                        <option value="social">اجتماعي</option>
+                        <option value="economic">اقتصادي</option>
+                        <option value="art">فني</option>
+                        <option value="biography">سيرة ذاتية</option>
+                        <option value="visions">رؤيات</option>
+                        <option value="stories">قصص</option>
+                        <option value="other">أخرى</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>ملخص قصير للكتاب:</label>
+                    <textarea id="summary" class="form-control" required placeholder="اكتب نبذة مختصرة تشرح محتوى الكتاب..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>إرفاق الملف:</label>
+                    <div class="file-upload">
+                        <input type="file" id="book-file" accept=".pdf,.docx,.epub" required>
+                        <label for="book-file" class="file-upload-label" id="file-label">
+                            <div>اضغط هنا لاختيار الملف</div>
+                            <div style="font-size: 0.9rem; color: #666; margin-top: 5px;">PDF, DOCX, EPUB (الحد الأقصى: 50MB)</div>
+                        </label>
+                    </div>
+                    <div id="file-info" class="file-info" style="display: none;"></div>
+                    <div id="progress-bar" class="progress-bar">
+                        <div id="progress-fill" class="progress-fill"></div>
+                    </div>
+                    <div id="progress-text" class="progress-text">جاري الرفع...</div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="saveDraft()">حفظ كمسودة</button>
+                    <button type="submit" class="btn" id="submit-btn">رفع للمراجعة</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script>
+        // Check if user is logged in
+        function checkAuth() {
+            const currentUserData = localStorage.getItem('lubab_current_user');
+            if (!currentUserData) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            const user = JSON.parse(currentUserData);
+            
+            // التحقق من وجود العناصر قبل الوصول إليها
+            const userNameElement = document.getElementById('user-name');
+            const userEmailElement = document.getElementById('user-email');
+            const emailInputElement = document.getElementById('email');
+            
+            if (userNameElement) {
+                userNameElement.textContent = user.name;
+            }
+            
+            if (userEmailElement) {
+                userEmailElement.textContent = user.email;
+            }
+            
+            if (emailInputElement) {
+                emailInputElement.value = user.email;
+            }
+            
+            // التحقق من وجود معلمة التعديل في الـ URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const editId = urlParams.get('edit');
+            if (editId) {
+                loadBookForEdit(editId);
+            }
+        }
+
+        // File upload handling
+        const fileInput = document.getElementById('book-file');
+        const fileLabel = document.getElementById('file-label');
+        const fileInfo = document.getElementById('file-info');
+
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // Check file size (50MB limit)
+                if (file.size > 50 * 1024 * 1024) {
+                    showError('حجم الملف كبير جداً. الحد الأقصى هو 50MB');
+                    fileInput.value = '';
+                    return;
+                }
+
+                // Check file type
+                const allowedTypes = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/epub+zip'];
+                if (!allowedTypes.includes(file.type)) {
+                    showError('نوع الملف غير مدعوم. الرجاء رفع PDF, DOCX, أو EPUB');
+                    fileInput.value = '';
+                    return;
+                }
+
+                // Update UI
+                fileLabel.classList.add('has-file');
+                fileLabel.innerHTML = `
+                    <div>تم اختيار: ${file.name}</div>
+                    <div style="font-size: 0.9rem; color: #4caf50; margin-top: 5px;">
+                        الحجم: ${(file.size / 1024 / 1024).toFixed(2)} MB
+                    </div>
+                `;
+                fileInfo.style.display = 'block';
+                fileInfo.textContent = `جاهز للرفع: ${file.name}`;
+            }
+        });
+
+        // Form submission
+        document.getElementById('book-upload-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submit-btn');
+            const progressBar = document.getElementById('progress-bar');
+            const progressFill = document.getElementById('progress-fill');
+            const progressText = document.getElementById('progress-text');
+            
+            // Disable submit button
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'جاري الرفع...';
+            
+            try {
+                // Get form data
+                const formData = {
+                    email: document.getElementById('email').value,
+                    title: document.getElementById('book-title').value,
+                    pageCount: parseInt(document.getElementById('page-count').value),
+                    author: document.getElementById('author-name').value,
+                    category: document.getElementById('category').value,
+                    summary: document.getElementById('summary').value,
+                    status: 'pending',
+                    uploadDate: new Date().toISOString().split('T')[0],
+                    views: 0,
+                    likes: 0
+                };
+
+                // 1. تأكد أولاً أن supabase موجود ومحمل
+                if (!supabase) {
+                    // محاولة إعادة تعريف سريعة إذا سقط التعريف الأول
+                    console.error("المكتبة غير محملة، جاري محاولة الربط...");
+                    showNotification("خطأ في الاتصال بقاعدة البيانات", 'error');
+                    return;
+                }
+
+                // Upload file to Supabase Storage
+                const file = fileInput.files[0];
+                
+                // كود لتنظيف اسم الملف من المسافات والرموز الخاصة
+                const cleanFileName = file.name.replace(/[^\x00-\x7F]/g, "").replace(/\s+/g, "_");
+                const filePath = `${Date.now()}_${cleanFileName}`;
+                
+                // كود الرفع الخاص بك يجب أن يشير إلى الباكت 'books'
+                const { data: uploadData, error: uploadError } = await supabase.storage
+                    .from('books') // تأكد أن هذا الاسم مطابق للذي أنشأته في لوحة التحكم
+                    .upload(filePath, file);
+
+                if (uploadError) {
+                    if (uploadError.message.includes('Bucket not found')) {
+                        showNotification("خطأ: يجب عليك إنشاء Bucket باسم books في لوحة تحكم Supabase أولاً.", 'error');
+                        return;
+                    }
+                    if (uploadError.message.includes('Invalid key')) {
+                        showNotification("خطأ: اسم الملف يحتوي على حروف غير مدعومة. تم تنظيف الاسم تلقائياً.", 'error');
+                        return;
+                    }
+                    throw uploadError;
+                }
+
+                // Get public URL
+                const { data: { publicUrl } } = supabase.storage
+                    .from('books')
+                    .getPublicUrl(filePath);
+
+                // Add file URL to form data
+                formData.fileUrl = publicUrl;
+                formData.fileName = filePath;
+
+                // 2. الآن استخدم supabase.from بأمان
+                try {
+                    // التأكد من أن المستخدم مسجل دخوله (Authenticated)
+                    if (!currentUser) {
+                        showNotification('يجب تسجيل الدخول لرفع الكتب', 'error');
+                        return;
+                    }
+
+                    // إضافة إيميل المستخدم الحالي للتحقق من الملكية
+                    formData.uploader_email = currentUser.email;
+
+                    const { data: bookData, error: insertError } = await supabase
+                        .from('books') // تأكد أن اسم الجدول هنا مطابق لقاعدة بياناتك
+                        .insert([formData]);
+                    
+                    if (insertError) {
+                        if (insertError.message.includes('permission denied')) {
+                            showNotification('لا تملك صلاحية رفع الكتب', 'error');
+                            return;
+                        }
+                        throw insertError;
+                    }
+                    
+                    showNotification("تم الرفع بنجاح! الكتاب قيد المراجعة.", 'success');
+                    
+                    // Reset form
+                    document.getElementById('book-upload-form').reset();
+                    fileLabel.classList.remove('has-file');
+                    fileLabel.innerHTML = `
+                        <div>اضغط هنا لاختيار الملف</div>
+                        <div style="font-size: 0.9rem; color: #666; margin-top: 5px;">PDF, DOCX, EPUB (الحد الأقصى: 50MB)</div>
+                    `;
+                    fileInfo.style.display = 'none';
+                    
+                    // Redirect to dashboard after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 2000);
+                } catch (err) {
+                    console.error("Upload error:", err.message);
+                    showNotification("حدث خطأ أثناء الرفع: " + err.message, 'error');
+                    throw err;
+                }
+
+            } catch (error) {
+                console.error('Upload error:', error);
+                showError('حدث خطأ أثناء رفع الكتاب. الرجاء المحاولة مرة أخرى.');
+            } finally {
+                // Reset UI
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'رفع للمراجعة';
+                progressBar.style.display = 'none';
+                progressText.style.display = 'none';
+                progressFill.style.width = '0%';
+            }
+        });
+
+        // Save draft function
+        function saveDraft() {
+            const draftData = {
+                title: document.getElementById('book-title').value,
+                pageCount: document.getElementById('page-count').value,
+                author: document.getElementById('author-name').value,
+                category: document.getElementById('category').value,
+                summary: document.getElementById('summary').value,
+                savedAt: new Date().toISOString()
+            };
+            
+            localStorage.setItem('lubab_book_draft', JSON.stringify(draftData));
+            showSuccess('تم حفظ المسودة بنجاح!');
+        }
+
+        // Load draft on page load
+        function loadDraft() {
+            const draft = localStorage.getItem('lubab_book_draft');
+            if (draft) {
+                const draftData = JSON.parse(draft);
+                document.getElementById('book-title').value = draftData.title || '';
+                document.getElementById('page-count').value = draftData.pageCount || '';
+                document.getElementById('author-name').value = draftData.author || '';
+                document.getElementById('category').value = draftData.category || '';
+                document.getElementById('summary').value = draftData.summary || '';
+            }
+        }
+
+        // Utility functions
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('success-message');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            setTimeout(() => {
+                successDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            loadDraft();
+        });
+    </script>
+</body>
+</html>

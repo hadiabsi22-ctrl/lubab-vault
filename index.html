@@ -21,6 +21,7 @@
     <link rel="canonical" href="https://www.lubabai.online/">
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/main.css">
     <style>
         * {
             box-sizing: border-box;
@@ -168,10 +169,10 @@
 </head>
 <body>
     <div class="container">
-        <div class="header">
+        <header class="header">
             <h1>لُباب الرقمي</h1>
-            <p>منصة الكتب والمحتوى الثقافي الرقمي</p>
-        </div>
+            <p>منصة عربية للكتب والمحتوى الثقافي الرقمي</p>
+        </header>
 
         <div class="main-content">
             <div class="cta-section">
@@ -181,8 +182,8 @@
                 </p>
                 
                 <div style="margin-bottom: 30px;">
-                    <a href="books.html" class="btn" onclick="console.log('Books link clicked!')">تصفح الكتب</a>
-                    <a href="login.html" class="btn btn-secondary" onclick="console.log('Login link clicked!')">تسجيل الدخول</a>
+                    <a href="/books.html" class="btn" onclick="console.log('Books link clicked!')">تصفح الكتب</a>
+                    <a href="/login.html" class="btn btn-secondary" onclick="console.log('Login link clicked!')">تسجيل الدخول</a>
                 </div>
             </div>
 
@@ -209,7 +210,7 @@
             </div>
         </div>
 
-        <div class="footer">
+        <footer class="footer">
             <p>&copy; 2024 لُباب الرقمي - جميع الحقوق محفوظة</p>
             <div style="margin-top: 15px;">
                 <a href="about.html" style="color: #666; text-decoration: none; margin: 0 10px;">من نحن</a>
@@ -217,7 +218,7 @@
                 <a href="terms.html" style="color: #666; text-decoration: none; margin: 0 10px;">الشروط والأحكام</a>
                 <a href="contact.html" style="color: #666; text-decoration: none; margin: 0 10px;">اتصل بنا</a>
             </div>
-        </div>
+        </footer>
     </div>
 
     <script>
@@ -237,3 +238,7 @@
         // Check auth status when page loads
         checkAuthStatus();
     </script>
+
+    <script type="module" src="/scripts/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="لوحة التحكم الخاصة بمنصة لُباب الرقمي">
+    <title>لوحة التحكم - لُباب الرقمي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: #0d0d0d;
+            color: #c4c4c4;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000 100%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #fff;
+            text-shadow: 2px 2px 0px #8a0303, -1px -1px 5px #000;
+            font-family: 'Courier New', Courier, monospace;
+            margin-bottom: 10px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background: #111;
+            color: #fff;
+            border: 1px solid #333;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .tab.active {
+            background: #8a0303;
+        }
+
+        .tab:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(138, 3, 3, 0.3);
+        }
+
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .book-card {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #333;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            transition: all 0.3s;
+        }
+
+        .book-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+        }
+
+        .book-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .book-title {
+            color: #fff;
+            font-size: 1.2rem;
+            margin: 0 0 5px 0;
+        }
+
+        .book-author {
+            color: #888;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .status-pending { background: #ff6b35; }
+        .status-approved { background: #4caf50; }
+        .status-rejected { background: #f44336; }
+        .status-suspended { background: #ff9800; }
+
+        .book-summary {
+            color: #bbb;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            margin-bottom: 15px;
+        }
+
+        .book-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .book-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .btn-download { background: #111; color: #fff; border: 1px solid #333; }
+        .btn-approve { background: #4caf50; color: #fff; }
+        .btn-reject { background: #f44336; color: #fff; }
+        .btn-suspend { background: #ff9800; color: #fff; }
+        .btn-delete { background: #9e9e9e; color: #fff; }
+
+        .upload-section {
+            background: rgba(10, 10, 10, 0.9);
+            border: 1px solid #333;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .upload-section h2 {
+            color: #fff;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #8a0303;
+            display: inline-block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #aaa;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            background: #111;
+            border: 1px solid #333;
+            color: #fff;
+            border-radius: 4px;
+            font-family: 'Tajawal', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #8a0303;
+            box-shadow: 0 0 5px rgba(138, 3, 3, 0.3);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .btn-submit {
+            background: #8a0303;
+            color: #fff;
+            border: 1px solid #8a0303;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 4px;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .btn-submit:hover {
+            background: #a50404;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(138, 3, 3, 0.3);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .empty-state h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .rejection-reason, .suspension-reason {
+            background: rgba(244, 67, 54, 0.1);
+            border: 1px solid #f44336;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        .suspension-reason {
+            background: rgba(255, 152, 0, 0.1);
+            border-color: #ff9800;
+        }
+
+        .reason-title {
+            color: #f44336;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .suspension-reason .reason-title {
+            color: #ff9800;
+        }
+
+        .reason-text {
+            color: #ff9999;
+            margin: 0;
+        }
+
+        .suspension-reason .reason-text {
+            color: #ffb74d;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #111;
+            border: 1px solid #333;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+        }
+
+        .modal-header {
+            color: #fff;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .btn-cancel {
+            background: #333;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .btn-confirm {
+            background: #f44336;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .btn-confirm.suspend {
+            background: #ff9800;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #333;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #8a0303;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .books-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                flex-direction: column;
+            }
+
+            .tabs {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>لوحة التحكم - لُباب الرقمي</h1>
+            <p style="color: #888;">SYSTEM.ADMIN.CONTROL</p>
+            <div id="user-info" style="text-align: left; margin-top: 10px; display: none;">
+                <span style="color: #8a0303; font-family: monospace;">المسؤول: </span>
+                <span id="admin-name" style="color: #fff; font-family: monospace;"></span>
+                <button onclick="logout()" style="background: #8a0303; color: #fff; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer; margin-right: 10px;">تسجيل الخروج</button>
+            </div>
+        </div>
+
+        <!-- Login Section -->
+        <div id="login-section" style="display: flex; justify-content: center; align-items: center; min-height: 70vh;">
+            <div style="background: rgba(20, 20, 20, 0.9); border: 1px solid #333; padding: 40px; border-radius: 8px; width: 90%; max-width: 400px; backdrop-filter: blur(10px);">
+                <h2 style="color: #fff; text-align: center; margin-bottom: 30px; font-family: 'Courier New', monospace; border-bottom: 2px solid #8a0303; padding-bottom: 15px;">
+                    تسجيل دخول المسؤول
+                </h2>
+                <form id="admin-login-form">
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; color: #888; font-family: monospace;">اسم المستخدم:</label>
+                        <input type="text" id="admin-username" style="width: 100%; padding: 12px; background: #111; border: 1px solid #333; color: #fff; border-radius: 4px; font-family: monospace;" placeholder="أدخل اسم المستخدم" required>
+                    </div>
+                    <div style="margin-bottom: 25px;">
+                        <label style="display: block; margin-bottom: 8px; color: #888; font-family: monospace;">كلمة المرور:</label>
+                        <input type="password" id="admin-password" style="width: 100%; padding: 12px; background: #111; border: 1px solid #333; color: #fff; border-radius: 4px; font-family: monospace;" placeholder="أدخل كلمة المرور" required>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: flex; align-items: center; color: #888; font-family: monospace; cursor: pointer;">
+                            <input type="checkbox" id="remember-me" style="margin-left: 8px;">
+                            <span>تذكرني</span>
+                        </label>
+                    </div>
+                    <button type="submit" style="width: 100%; padding: 14px; background: #8a0303; color: #fff; border: 1px solid #8a0303; border-radius: 4px; font-size: 1rem; font-family: monospace; cursor: pointer; font-weight: bold;">
+                        دخول
+                    </button>
+                </form>
+                <div id="login-error" style="color: #ff4444; text-align: center; margin-top: 15px; font-family: monospace; display: none;"></div>
+            </div>
+        </div>
+
+        <!-- Admin Panel (hidden by default) -->
+        <div id="admin-panel" style="display: none;">
+            <div class="tabs">
+                <div class="tab active" data-tab="pending">قيد المراجعة (2)</div>
+                <div class="tab" data-tab="approved">معتمد (2)</div>
+                <div class="tab" data-tab="rejected">مرفوض (0)</div>
+                <div class="tab" data-tab="suspended">معلق (0)</div>
+                <div class="tab" data-tab="upload">📤 رفع كتاب (مسؤول)</div>
+            </div>
+
+        <!-- Upload Section -->
+        <div id="upload-section" class="upload-section" style="display: none;">
+            <h2>رفع كتاب مباشرة (مسؤول)</h2>
+            <p style="color: #888; margin-bottom: 20px;">الكتب المرفوعة من قبل المسؤولين يتم نشرها مباشرة دون الحاجة للمراجعة</p>
+            
+            <form id="upload-form">
+                <div class="form-group">
+                    <label>البريد الإلكتروني:</label>
+                    <input type="email" name="email" class="form-control" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>اسم الكتاب:</label>
+                        <input type="text" name="bookTitle" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>عدد الصفحات:</label>
+                        <input type="number" name="pageCount" class="form-control" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>اسم المؤلف:</label>
+                    <input type="text" name="authorName" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>تصنيف الكتاب:</label>
+                    <select name="category" class="form-control" required>
+                        <option value="">اختر التصنيف</option>
+                        <option value="literature">أدبي</option>
+                        <option value="political">سياسي</option>
+                        <option value="historical">تاريخي</option>
+                        <option value="religious">ديني</option>
+                        <option value="philosophical">فلسفي</option>
+                        <option value="scientific">علمي</option>
+                        <option value="social">اجتماعي</option>
+                        <option value="economic">اقتصادي</option>
+                        <option value="art">فني</option>
+                        <option value="biography">سيرة ذاتية</option>
+                        <option value="visions">رؤيات</option>
+                        <option value="stories">قصص</option>
+                        <option value="other">أخرى</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>ملخص قصير للكتاب:</label>
+                    <textarea name="summary" class="form-control" rows="4" placeholder="اكتب نبذة مختصرة تشرح محتوى الكتاب..." required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>إرفاق الملف:</label>
+                    <input type="file" accept=".pdf, .docx" class="form-control" required>
+                </div>
+                
+                <div id="upload-progress" style="display: none;">
+                    <div class="progress-text">
+                        <span>جاري رفع الملف...</span>
+                        <span id="progress-percent">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div id="progress-fill" class="progress-fill" style="width: 0%;"></div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn-submit">رفع ونشر مباشر</button>
+            </form>
+        </div>
+
+        <!-- Books Grid -->
+        <div id="books-grid" class="books-grid"></div>
+
+        <!-- Empty State -->
+        <div id="empty-state" class="empty-state" style="display: none;">
+            <h3>لا توجد كتب في هذا القسم</h3>
+            <p id="empty-message">جميع الكتب تمت مراجعتها</p>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <h2 id="modal-title" class="modal-header">رفض الكتاب: </h2>
+            
+            <div class="form-group">
+                <label id="modal-reason-label">سبب الرفض:</label>
+                <textarea id="modal-reason" class="form-control" rows="4" placeholder="اكتب سبب رفض الكتاب..." required></textarea>
+            </div>
+
+            <div id="modal-changes-group" class="form-group">
+                <label>التعديلات المطلوبة (اختياري):</label>
+                <textarea id="modal-changes" class="form-control" rows="4" placeholder="اكتب التعديلات المطلوبة للموافقة على الكتاب..."></textarea>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal()">إلغاء</button>
+                <button id="modal-confirm" class="btn-confirm" onclick="confirmAction()">تأكيد الرفض</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data
+        let books = [
+            {
+                id: '1',
+                title: 'فلسفة العبث',
+                author: 'أحمد عبدالله',
+                summary: 'يناقش هذا الكتاب العبثية في الحياة اليومية، وكيف يمكن للإنسان إيجاد المعنى في عالم يبدو بلا هدف.',
+                pageCount: 245,
+                views: 1234,
+                likes: 89,
+                uploadDate: '2024-01-15',
+                status: 'approved',
+                category: 'philosophical'
+            },
+            {
+                id: '2',
+                title: 'تاريخ الظلال',
+                author: 'سارة محمد',
+                summary: 'سرد تاريخي للأحداث التي لم تُكتب في الكتب الرسمية. مؤامرات، أسرار، وحقائق تم طمسها عمداً.',
+                pageCount: 156,
+                views: 892,
+                likes: 67,
+                uploadDate: '2024-02-20',
+                status: 'approved',
+                category: 'political'
+            },
+            {
+                id: '3',
+                title: 'مخطوطة منسية',
+                author: 'علي خالد',
+                summary: 'مخطوطة قديمة تم العثور عليها في مكتبة مهجورة، تحتوي على معلومات غامضة حول تاريخ المنطقة.',
+                pageCount: 89,
+                views: 0,
+                likes: 0,
+                uploadDate: '2024-03-25',
+                status: 'pending',
+                category: 'historical'
+            },
+            {
+                id: '4',
+                title: 'أسرار الليل',
+                author: 'نورا أحمد',
+                summary: 'رواية غامضة تدور أحداثها في مدينة مهجورة، تتحدث عن أسرار وخفايا لا يعرفها أحد.',
+                pageCount: 234,
+                views: 0,
+                likes: 0,
+                uploadDate: '2024-03-26',
+                status: 'pending',
+                category: 'literature'
+            }
+        ];
+
+        // Admin credentials
+        const ADMIN_CREDENTIALS = {
+            username: 'admin',
+            password: 'A7#mK!9v$LqP@2xZ'
+        };
+
+        let currentTab = 'pending';
+        let selectedBook = null;
+        let currentAction = '';
+        let currentUser = null;
+
+        const categories = {
+            literature: 'أدبي',
+            political: 'سياسي',
+            historical: 'تاريخي',
+            religious: 'ديني',
+            philosophical: 'فلسفي',
+            scientific: 'علمي',
+            social: 'اجتماعي',
+            economic: 'اقتصادي',
+            art: 'فني',
+            biography: 'سيرة ذاتية',
+            visions: 'رؤيات',
+            stories: 'قصص',
+            other: 'أخرى'
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            
+            // Admin login form handler
+            document.getElementById('admin-login-form').addEventListener('submit', handleAdminLogin);
+        });
+
+        function checkAuth() {
+            const savedAuth = localStorage.getItem('adminAuth');
+            if (savedAuth) {
+                const auth = JSON.parse(savedAuth);
+                if (auth.username === ADMIN_CREDENTIALS.username && auth.password === ADMIN_CREDENTIALS.password) {
+                    currentUser = auth.username;
+                    showAdminPanel();
+                    return;
+                }
+            }
+            showLoginSection();
+        }
+
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('admin-username').value;
+            const password = document.getElementById('admin-password').value;
+            const rememberMe = document.getElementById('remember-me').checked;
+            const errorDiv = document.getElementById('login-error');
+            
+            errorDiv.style.display = 'none';
+            
+            if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+                currentUser = username;
+                
+                if (rememberMe) {
+                    localStorage.setItem('adminAuth', JSON.stringify({ username, password }));
+                } else {
+                    sessionStorage.setItem('adminAuth', JSON.stringify({ username, password }));
+                }
+                
+                showAdminPanel();
+            } else {
+                errorDiv.textContent = 'اسم المستخدم أو كلمة المرور غير صحيحة';
+                errorDiv.style.display = 'block';
+            }
+        }
+
+        function showLoginSection() {
+            document.getElementById('login-section').style.display = 'flex';
+            document.getElementById('admin-panel').style.display = 'none';
+            document.getElementById('user-info').style.display = 'none';
+        }
+
+        function showAdminPanel() {
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('admin-panel').style.display = 'block';
+            document.getElementById('user-info').style.display = 'block';
+            document.getElementById('admin-name').textContent = currentUser;
+            
+            updateTabCounts();
+            showBooks(currentTab);
+            
+            // Tab click handlers
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    currentTab = this.dataset.tab;
+                    showBooks(currentTab);
+                });
+            });
+
+            // Upload form handler
+            document.getElementById('upload-form').addEventListener('submit', handleUpload);
+        }
+
+        function logout() {
+            localStorage.removeItem('adminAuth');
+            sessionStorage.removeItem('adminAuth');
+            currentUser = null;
+            
+            // Clear form
+            document.getElementById('admin-username').value = '';
+            document.getElementById('admin-password').value = '';
+            document.getElementById('remember-me').checked = false;
+            
+            showLoginSection();
+        }
+
+        function updateTabCounts() {
+            const counts = {
+                pending: books.filter(b => b.status === 'pending').length,
+                approved: books.filter(b => b.status === 'approved').length,
+                rejected: books.filter(b => b.status === 'rejected').length,
+                suspended: books.filter(b => b.status === 'suspended').length
+            };
+
+            document.querySelector('[data-tab="pending"]').textContent = `قيد المراجعة (${counts.pending})`;
+            document.querySelector('[data-tab="approved"]').textContent = `معتمد (${counts.approved})`;
+            document.querySelector('[data-tab="rejected"]').textContent = `مرفوض (${counts.rejected})`;
+            document.querySelector('[data-tab="suspended"]').textContent = `معلق (${counts.suspended})`;
+        }
+
+        function showBooks(tab) {
+            const grid = document.getElementById('books-grid');
+            const uploadSection = document.getElementById('upload-section');
+            const emptyState = document.getElementById('empty-state');
+
+            if (tab === 'upload') {
+                grid.style.display = 'none';
+                uploadSection.style.display = 'block';
+                emptyState.style.display = 'none';
+                return;
+            }
+
+            uploadSection.style.display = 'none';
+            
+            const filteredBooks = books.filter(book => book.status === tab);
+            
+            if (filteredBooks.length === 0) {
+                grid.style.display = 'none';
+                emptyState.style.display = 'block';
+                
+                const messages = {
+                    pending: 'جميع الكتب تمت مراجعتها',
+                    approved: 'لا توجد كتب معتمدة بعد',
+                    rejected: 'لا توجد كتب مرفوضة',
+                    suspended: 'لا توجد كتب معلقة'
+                };
+                
+                document.getElementById('empty-message').textContent = messages[tab];
+            } else {
+                grid.style.display = 'grid';
+                emptyState.style.display = 'none';
+                renderBooks(filteredBooks);
+            }
+        }
+
+        function renderBooks(booksToRender) {
+            const grid = document.getElementById('books-grid');
+            grid.innerHTML = '';
+
+            booksToRender.forEach(book => {
+                const card = createBookCard(book);
+                grid.appendChild(card);
+            });
+        }
+
+        function createBookCard(book) {
+            const card = document.createElement('div');
+            card.className = 'book-card';
+
+            const statusClass = `status-${book.status}`;
+            const statusText = getStatusText(book.status);
+            const categoryText = categories[book.category] || 'غير مصنف';
+
+            card.innerHTML = `
+                <div class="book-header">
+                    <div>
+                        <h3 class="book-title">${book.title}</h3>
+                        <p class="book-author">المؤلف: ${book.author}</p>
+                    </div>
+                    <span class="status-badge ${statusClass}">${statusText}</span>
+                </div>
+
+                <p class="book-summary">${book.summary}</p>
+
+                <div class="book-meta">
+                    <span>${book.pageCount} صفحة</span>
+                    <span>${book.uploadDate}</span>
+                    <span>${categoryText}</span>
+                </div>
+
+                ${book.status === 'rejected' ? `
+                    <div class="rejection-reason">
+                        <p class="reason-title">سبب الرفض:</p>
+                        <p class="reason-text">${book.rejectionReason || 'غير محدد'}</p>
+                        ${book.requiredChanges ? `
+                            <p class="reason-title">التعديلات المطلوبة:</p>
+                            <p class="reason-text">${book.requiredChanges}</p>
+                        ` : ''}
+                    </div>
+                ` : ''}
+
+                ${book.status === 'suspended' ? `
+                    <div class="suspension-reason">
+                        <p class="reason-title">سبب التعليق:</p>
+                        <p class="reason-text">${book.suspensionReason || 'غير محدد'}</p>
+                    </div>
+                ` : ''}
+
+                <div class="book-actions">
+                    <button class="btn btn-download" onclick="downloadBook('${book.id}')">📥 تحميل المسودة</button>
+                    ${getActionButtons(book)}
+                </div>
+            `;
+
+            return card;
+        }
+
+        function getActionButtons(book) {
+            switch (book.status) {
+                case 'pending':
+                    return `
+                        <button class="btn btn-approve" onclick="approveBook('${book.id}')">✅ موافقة</button>
+                        <button class="btn btn-reject" onclick="rejectBook('${book.id}')">❌ رفض</button>
+                    `;
+                case 'approved':
+                    return `
+                        <button class="btn btn-suspend" onclick="suspendBook('${book.id}')">⏸️ تعليق</button>
+                        <button class="btn btn-delete" onclick="deleteBook('${book.id}')">🗑️ حذف</button>
+                    `;
+                case 'suspended':
+                    return `
+                        <button class="btn btn-approve" onclick="approveBook('${book.id}')">✅ إعادة تفعيل</button>
+                        <button class="btn btn-delete" onclick="deleteBook('${book.id}')">🗑️ حذف</button>
+                    `;
+                case 'rejected':
+                    return `<button class="btn btn-delete" onclick="deleteBook('${book.id}')">🗑️ حذف</button>`;
+                default:
+                    return '';
+            }
+        }
+
+        function getStatusText(status) {
+            const statusMap = {
+                pending: 'قيد المراجعة',
+                approved: 'معتمد',
+                rejected: 'مرفوض',
+                suspended: 'معلق'
+            };
+            return statusMap[status] || status;
+        }
+
+        function approveBook(bookId) {
+            books = books.map(book => 
+                book.id === bookId ? { ...book, status: 'approved' } : book
+            );
+            updateTabCounts();
+            showBooks(currentTab);
+        }
+
+        function rejectBook(bookId) {
+            selectedBook = books.find(book => book.id === bookId);
+            currentAction = 'reject';
+            openModal('reject');
+        }
+
+        function suspendBook(bookId) {
+            selectedBook = books.find(book => book.id === bookId);
+            currentAction = 'suspend';
+            openModal('suspend');
+        }
+
+        function deleteBook(bookId) {
+            if (confirm('هل أنت متأكد من حذف هذا الكتاب نهائياً؟')) {
+                books = books.filter(book => book.id !== bookId);
+                updateTabCounts();
+                showBooks(currentTab);
+            }
+        }
+
+        function downloadBook(bookId) {
+            const book = books.find(b => b.id === bookId);
+            if (book) {
+                const fileContent = `
+عنوان: ${book.title}
+المؤلف: ${book.author}
+عدد الصفحات: ${book.pageCount}
+تاريخ الرفع: ${book.uploadDate}
+الملخص: ${book.summary}
+
+--- محتوى الكتاب ---
+هذا محتوى تجريبي للكتاب ${book.title}
+الفصل الأول: المقدمة
+الفصل الثاني: المحتوى الرئيسي
+الفصل الثالث: الخاتمة
+                `;
+                
+                const blob = new Blob([fileContent], { type: 'text/plain;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${book.title}_${book.author}.txt`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+        }
+
+        function openModal(action) {
+            const modal = document.getElementById('modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalReasonLabel = document.getElementById('modal-reason-label');
+            const modalChangesGroup = document.getElementById('modal-changes-group');
+            const modalConfirm = document.getElementById('modal-confirm');
+
+            if (action === 'suspend') {
+                modalTitle.textContent = `تعليق الكتاب: ${selectedBook.title}`;
+                modalReasonLabel.textContent = 'سبب التعليق:';
+                modalChangesGroup.style.display = 'none';
+                modalConfirm.textContent = 'تأكيد التعليق';
+                modalConfirm.className = 'btn-confirm suspend';
+            } else {
+                modalTitle.textContent = `رفض الكتاب: ${selectedBook.title}`;
+                modalReasonLabel.textContent = 'سبب الرفض:';
+                modalChangesGroup.style.display = 'block';
+                modalConfirm.textContent = 'تأكيد الرفض';
+                modalConfirm.className = 'btn-confirm';
+            }
+
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+            document.getElementById('modal-reason').value = '';
+            document.getElementById('modal-changes').value = '';
+            selectedBook = null;
+            currentAction = '';
+        }
+
+        function confirmAction() {
+            const reason = document.getElementById('modal-reason').value;
+            const changes = document.getElementById('modal-changes').value;
+
+            if (!reason) {
+                alert('يرجى إدخال السبب');
+                return;
+            }
+
+            if (currentAction === 'suspend') {
+                books = books.map(book => 
+                    book.id === selectedBook.id 
+                        ? { ...book, status: 'suspended', suspensionReason: reason }
+                        : book
+                );
+            } else if (currentAction === 'reject') {
+                books = books.map(book => 
+                    book.id === selectedBook.id 
+                        ? { ...book, status: 'rejected', rejectionReason: reason, requiredChanges: changes }
+                        : book
+                );
+            }
+
+            updateTabCounts();
+            showBooks(currentTab);
+            closeModal();
+        }
+
+        function handleUpload(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const progressDiv = document.getElementById('upload-progress');
+            const progressFill = document.getElementById('progress-fill');
+            const progressPercent = document.getElementById('progress-percent');
+            
+            progressDiv.style.display = 'block';
+            
+            // Simulate upload progress
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 10;
+                progressFill.style.width = progress + '%';
+                progressPercent.textContent = progress + '%';
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    
+                    // Add new book
+                    const newBook = {
+                        id: Date.now().toString(),
+                        title: formData.get('bookTitle'),
+                        author: formData.get('authorName'),
+                        summary: formData.get('summary'),
+                        pageCount: parseInt(formData.get('pageCount')),
+                        views: 0,
+                        likes: 0,
+                        uploadDate: new Date().toISOString().split('T')[0],
+                        status: 'approved',
+                        category: formData.get('category')
+                    };
+                    
+                    books.unshift(newBook);
+                    updateTabCounts();
+                    
+                    setTimeout(() => {
+                        progressDiv.style.display = 'none';
+                        progressFill.style.width = '0%';
+                        progressPercent.textContent = '0%';
+                        e.target.reset();
+                        
+                        // Switch to approved tab
+                        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                        document.querySelector('[data-tab="approved"]').classList.add('active');
+                        currentTab = 'approved';
+                        showBooks(currentTab);
+                        
+                        alert('تم رفع الكتاب ونشره بنجاح!');
+                    }, 1000);
+                }
+            }, 200);
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('modal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>
