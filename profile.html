@@ -620,14 +620,28 @@
 
         // Load user books
         async function loadUserBooks() {
+            // التأكد من أن المستخدم مسجل دخوله (Authenticated)
+            if (!currentUser) {
+                const booksGrid = document.getElementById('my-books');
+                booksGrid.innerHTML = '<div class="empty-state">يجب تسجيل الدخول لعرض كتبك</div>';
+                return;
+            }
+
             try {
                 const { data: books, error } = await supabase
                     .from('books')
                     .select('*')
-                    .eq('user_email', currentUser.email)
+                    .eq('uploader_email', currentUser.email) // التحقق من الملكية
                     .order('uploadDate', { ascending: false });
 
-                if (error) throw error;
+                if (error) {
+                    if (error.message.includes('permission denied')) {
+                        const booksGrid = document.getElementById('my-books');
+                        booksGrid.innerHTML = '<div class="empty-state">لا توجد كتب لعرضها</div>';
+                        return;
+                    }
+                    throw error;
+                }
 
                 userBooks = books || [];
                 displayUserBooks();
@@ -695,15 +709,47 @@
                 return;
             }
 
+            // التأكد من أن المستخدم مسجل دخوله (Authenticated)
+            if (!currentUser) {
+                showNotification('يجب تسجيل الدخول لحذف الكتب', 'error');
+                return;
+            }
+
             try {
-                const { error } = await supabase
+                // 1. حذف من قاعدة البيانات مع التحقق من الملكية
+                const { error: dbError } = await supabase
                     .from('books')
                     .delete()
-                    .eq('id', bookId);
+                    .eq('id', bookId)
+                    .eq('uploader_email', currentUser.email); // شرط الملكية
 
-                if (error) throw error;
+                if (dbError) {
+                    if (dbError.message.includes('permission denied')) {
+                        showNotification('لا يمكنك حذف هذا الكتاب، ليس من ملكيتك', 'error');
+                        return;
+                    }
+                    throw dbError;
+                }
 
-                // Remove from local array
+                // 2. البحث عن معلومات الملف للحذف من Storage
+                const { data: bookData } = await supabase
+                    .from('books')
+                    .select('fileName')
+                    .eq('id', bookId)
+                    .single();
+
+                if (bookData && bookData.fileName) {
+                    // 3. حذف الملف من Storage مع التحقق من الملكية
+                    const { error: storageError } = await supabase.storage
+                        .from('books')
+                        .remove([bookData.fileName]);
+
+                    if (storageError) {
+                        console.warn('تم حذف من قاعدة البيانات لكن فشل حذف الملف:', storageError);
+                    }
+                }
+
+                // 4. تحديث الواجهة
                 userBooks = userBooks.filter(book => book.id !== bookId);
                 displayUserBooks();
                 loadUserStats();
