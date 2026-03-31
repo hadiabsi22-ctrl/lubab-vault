@@ -254,6 +254,23 @@
 
         // Mock user database (in real app, this would be connected to a backend)
         let users = JSON.parse(localStorage.getItem('lubab_users') || '[]');
+        
+        // Add demo user if not exists
+        if (users.length === 0) {
+            const demoUser = {
+                id: '1',
+                name: 'مستخدم تجريبي',
+                email: 'user@example.com',
+                password: 'password123',
+                joinDate: '2024-01-01',
+                avatar: 'https://ui-avatars.com/api/?name=مستخدم+تجريبي&background=8a0303&color=fff'
+            };
+            users.push(demoUser);
+            localStorage.setItem('lubab_users', JSON.stringify(users));
+            console.log('Demo user created:', demoUser); // Debug
+        }
+        
+        console.log('Current users:', users); // Debug
 
         // Simple login function
         function handleLogin() {
@@ -384,19 +401,6 @@
             localStorage.setItem('lubab_users', JSON.stringify(users));
             console.log('Demo user created:', demoUser); // Debug
         }
-        
-        // Initialize form listeners
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('Login page loaded, users:', users); // Debug
-            
-            // Make sure form exists before adding listener
-            const loginForm = document.getElementById('login-form');
-            if (loginForm) {
-                console.log('Login form found, adding event listener'); // Debug
-            } else {
-                console.error('Login form not found!'); // Debug
-            }
-        });
     </script>
 </body>
 </html>
