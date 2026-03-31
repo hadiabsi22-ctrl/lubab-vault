@@ -256,46 +256,51 @@
         let users = JSON.parse(localStorage.getItem('lubab_users') || '[]');
 
         // Login form handler
-        document.getElementById('login-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            console.log('Login form submitted'); // Debug
-            
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            const rememberMe = document.getElementById('remember-me').checked;
-            const errorDiv = document.getElementById('login-error');
-            
-            console.log('Login data:', { email, rememberMe }); // Debug
-            
-            errorDiv.style.display = 'none';
-            
-            // Check if user exists
-            const user = users.find(u => u.email === email && u.password === password);
-            console.log('Found user:', user); // Debug
-            
-            if (user) {
-                // Store current user session with timestamp
-                const sessionData = {
-                    ...user,
-                    loginTime: Date.now(),
-                    rememberMe: rememberMe
-                };
-                localStorage.setItem('lubab_current_user', JSON.stringify(sessionData));
-                
-                // Store remember me preference
-                if (rememberMe) {
-                    localStorage.setItem('lubab_remember_me', 'true');
-                } else {
-                    localStorage.removeItem('lubab_remember_me');
-                }
-                
-                console.log('Login successful, redirecting...'); // Debug
-                window.location.href = 'dashboard.html';
-            } else {
-                // Show error
-                console.log('Login failed'); // Debug
-                errorDiv.textContent = 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
-                errorDiv.style.display = 'block';
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('login-form');
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    console.log('Login form submitted'); // Debug
+                    
+                    const email = document.getElementById('login-email').value;
+                    const password = document.getElementById('login-password').value;
+                    const rememberMe = document.getElementById('remember-me').checked;
+                    const errorDiv = document.getElementById('login-error');
+                    
+                    console.log('Login data:', { email, rememberMe }); // Debug
+                    
+                    errorDiv.style.display = 'none';
+                    
+                    // Check if user exists
+                    const user = users.find(u => u.email === email && u.password === password);
+                    console.log('Found user:', user); // Debug
+                    
+                    if (user) {
+                        // Store current user session with timestamp
+                        const sessionData = {
+                            ...user,
+                            loginTime: Date.now(),
+                            rememberMe: rememberMe
+                        };
+                        localStorage.setItem('lubab_current_user', JSON.stringify(sessionData));
+                        
+                        // Store remember me preference
+                        if (rememberMe) {
+                            localStorage.setItem('lubab_remember_me', 'true');
+                        } else {
+                            localStorage.removeItem('lubab_remember_me');
+                        }
+                        
+                        console.log('Login successful, redirecting...'); // Debug
+                        window.location.href = 'dashboard.html';
+                    } else {
+                        // Show error
+                        console.log('Login failed'); // Debug
+                        errorDiv.textContent = 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
+                        errorDiv.style.display = 'block';
+                    }
+                });
             }
         });
 
@@ -377,6 +382,14 @@
         // Initialize form listeners
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Login page loaded, users:', users); // Debug
+            
+            // Make sure form exists before adding listener
+            const loginForm = document.getElementById('login-form');
+            if (loginForm) {
+                console.log('Login form found, adding event listener'); // Debug
+            } else {
+                console.error('Login form not found!'); // Debug
+            }
         });
     </script>
 </body>
