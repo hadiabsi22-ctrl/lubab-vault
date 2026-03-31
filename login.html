@@ -199,7 +199,7 @@
                         <input type="checkbox" id="remember-me" style="width: auto; margin: 0;">
                         <label for="remember-me" style="margin: 0; color: #888; font-size: 0.9rem;">تذكرني لمدة 30 يوم</label>
                     </div>
-                    <button type="submit" class="btn">تسجيل الدخول</button>
+                    <button type="button" class="btn" onclick="handleLogin()">تسجيل الدخول</button>
                 </form>
             </div>
 
@@ -255,51 +255,57 @@
         // Mock user database (in real app, this would be connected to a backend)
         let users = JSON.parse(localStorage.getItem('lubab_users') || '[]');
 
+        // Simple login function
+        function handleLogin() {
+            console.log('Login button clicked!'); // Debug
+            
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const rememberMe = document.getElementById('remember-me').checked;
+            const errorDiv = document.getElementById('login-error');
+            
+            console.log('Login data:', { email, rememberMe }); // Debug
+            
+            errorDiv.style.display = 'none';
+            
+            // Check if user exists
+            const user = users.find(u => u.email === email && u.password === password);
+            console.log('Found user:', user); // Debug
+            
+            if (user) {
+                // Store current user session with timestamp
+                const sessionData = {
+                    ...user,
+                    loginTime: Date.now(),
+                    rememberMe: rememberMe
+                };
+                localStorage.setItem('lubab_current_user', JSON.stringify(sessionData));
+                
+                // Store remember me preference
+                if (rememberMe) {
+                    localStorage.setItem('lubab_remember_me', 'true');
+                } else {
+                    localStorage.removeItem('lubab_remember_me');
+                }
+                
+                console.log('Login successful, redirecting...'); // Debug
+                alert('تم تسجيل الدخول بنجاح!');
+                window.location.href = 'dashboard.html';
+            } else {
+                // Show error
+                console.log('Login failed'); // Debug
+                errorDiv.textContent = 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
+                errorDiv.style.display = 'block';
+            }
+        }
+
         // Login form handler
         document.addEventListener('DOMContentLoaded', function() {
             const loginForm = document.getElementById('login-form');
             if (loginForm) {
                 loginForm.addEventListener('submit', function(e) {
                     e.preventDefault();
-                    console.log('Login form submitted'); // Debug
-                    
-                    const email = document.getElementById('login-email').value;
-                    const password = document.getElementById('login-password').value;
-                    const rememberMe = document.getElementById('remember-me').checked;
-                    const errorDiv = document.getElementById('login-error');
-                    
-                    console.log('Login data:', { email, rememberMe }); // Debug
-                    
-                    errorDiv.style.display = 'none';
-                    
-                    // Check if user exists
-                    const user = users.find(u => u.email === email && u.password === password);
-                    console.log('Found user:', user); // Debug
-                    
-                    if (user) {
-                        // Store current user session with timestamp
-                        const sessionData = {
-                            ...user,
-                            loginTime: Date.now(),
-                            rememberMe: rememberMe
-                        };
-                        localStorage.setItem('lubab_current_user', JSON.stringify(sessionData));
-                        
-                        // Store remember me preference
-                        if (rememberMe) {
-                            localStorage.setItem('lubab_remember_me', 'true');
-                        } else {
-                            localStorage.removeItem('lubab_remember_me');
-                        }
-                        
-                        console.log('Login successful, redirecting...'); // Debug
-                        window.location.href = 'dashboard.html';
-                    } else {
-                        // Show error
-                        console.log('Login failed'); // Debug
-                        errorDiv.textContent = 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
-                        errorDiv.style.display = 'block';
-                    }
+                    handleLogin();
                 });
             }
         });
