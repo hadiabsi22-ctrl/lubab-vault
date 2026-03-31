@@ -745,6 +745,16 @@
             updateRatingDisplay(userRating);
         });
 
+        function updateRatingDisplay(rating) {
+            document.querySelectorAll('.star').forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+        }
+
         // Submit review
         async function submitReview() {
             if (!currentUser) {
